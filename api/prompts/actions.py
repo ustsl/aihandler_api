@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from api.prompts.models import GPTPromptCreate, GPTPromptShortShow, GPTPromptShow
 from db.prompts.dals import PromptDAL
 from sqlalchemy.ext.asyncio import AsyncSession
+from api.utils import handle_dal_errors
 
 
 async def _create_new_prompt(body: GPTPromptCreate, db) -> GPTPromptShortShow:
@@ -22,36 +23,29 @@ async def _create_new_prompt(body: GPTPromptCreate, db) -> GPTPromptShortShow:
             )
 
 
+@handle_dal_errors
 async def _show_prompts(db: AsyncSession) -> List[GPTPromptShow]:
     obj_dal = PromptDAL(db)
     results = await obj_dal.list()
-    if isinstance(results, dict) and "error" in results:
-        raise HTTPException(status_code=500, detail=results["error"])
     return results
 
 
+@handle_dal_errors
 async def _show_prompt(id: str, db: AsyncSession) -> GPTPromptShow:
     obj_dal = PromptDAL(db)
     result = await obj_dal.get(id)
-    if isinstance(result, dict) and "error" in result:
-        status = 500
-        if result.get("status"):
-            status = result.get("status")
-        raise HTTPException(status_code=status, detail=result["error"])
     return result
 
 
+@handle_dal_errors
 async def _update_prompt(id: UUID, updates: dict, db: AsyncSession) -> GPTPromptShow:
     obj_dal = PromptDAL(db)
     result = await obj_dal.update(id, **updates)
-    if isinstance(result, dict) and "error" in result:
-        raise HTTPException(status_code=500, detail=result["error"])
     return result
 
 
+@handle_dal_errors
 async def _delete_prompt(id: UUID, db: AsyncSession) -> dict:
     obj_dal = PromptDAL(db)
     result = await obj_dal.delete(id)
-    if isinstance(result, dict) and "error" in result:
-        raise HTTPException(status_code=500, detail=result["error"])
     return result
