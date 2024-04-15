@@ -5,7 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from db.base import Base
+from db.models import Base
 from settings import DB_NAME, DB_USER, DB_PASSWORD
 
 # this is the Alembic Config object, which provides
@@ -15,6 +15,8 @@ section = config.config_ini_section
 config.set_section_option(section, "DB_USER", DB_USER)
 config.set_section_option(section, "DB_NAME", DB_NAME)
 config.set_section_option(section, "DB_PASSWORD", DB_PASSWORD)
+
+print(DB_NAME, DB_USER)
 
 
 # Interpret the config file for Python logging.
@@ -28,7 +30,6 @@ if config.config_file_name is not None:
 from db.prompts.models import PromptModel
 
 target_metadata = Base.metadata
-
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

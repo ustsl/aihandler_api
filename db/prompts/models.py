@@ -2,7 +2,6 @@ import uuid
 
 from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
-
 from db.models import MaintenanceModel
 
 
@@ -17,3 +16,4 @@ class PromptModel(MaintenanceModel):
     title = Column(String, nullable=False, unique=True)
     description = Column(String, nullable=False)
     prompt = Column(String, nullable=False)
+    model = Column(String, default="gpt-3.5-turbo", nullable=True)

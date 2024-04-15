@@ -1,7 +1,3 @@
-
-
-- create USE methods (post with model UUID) and with empty response
-- implement ai-methods
 - create tests for AI methods
 ====
 - deploy it on server

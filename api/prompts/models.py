@@ -1,18 +1,28 @@
 import re
+from typing import Literal
 import uuid
 from datetime import datetime
 from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr, field_validator
+
+from settings import ALLOWED_MODELS
 
 #########################
 # BLOCK WITH API MODELS #
 #########################
 
 
-class GPTPropmptBase(BaseModel):
+class GPTPromptBase(BaseModel):
     title: str
     description: str
     prompt: str
+    model: str
+
+    @field_validator("model")
+    def validate_model(cls, value):
+        if not value in ALLOWED_MODELS:
+            raise ValueError("Model must be a real GPT model")
+        return value
 
     @field_validator("title")
     def validate_title(cls, value):
@@ -24,7 +34,7 @@ class GPTPropmptBase(BaseModel):
         return value
 
 
-class GPTPromptShortShow(GPTPropmptBase):
+class GPTPromptShortShow(GPTPromptBase):
     id: uuid.UUID
     time_create: datetime
 
@@ -32,16 +42,8 @@ class GPTPromptShortShow(GPTPropmptBase):
 class GPTPromptShow(GPTPromptShortShow):
     is_active: bool
     time_update: datetime
+    model: str
 
 
-class GPTPromptCreate(GPTPropmptBase):
-    pass
-
-
-class GPTPromptUse(BaseModel):
-    id: uuid.UUID
-    query: str
-
-
-class GPTPromptUseResult(BaseModel):
+class GPTPromptCreate(GPTPromptBase):
     pass

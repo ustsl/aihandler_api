@@ -14,10 +14,10 @@ class PromptDAL:
     def __init__(self, db_session: AsyncSession):
         self.db_session = db_session
 
-    async def create(self, title: str, description: str, prompt: str):
+    async def create(self, title: str, description: str, prompt: str, model: str):
         try:
             new_prompt = PromptModel(
-                title=title, description=description, prompt=prompt
+                title=title, description=description, prompt=prompt, model=model
             )
             self.db_session.add(new_prompt)
             await self.db_session.flush()

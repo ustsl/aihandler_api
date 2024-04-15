@@ -20,6 +20,7 @@ async def _create_new_prompt(body: GPTPromptCreate, db) -> GPTPromptShortShow:
                 description=result.description,
                 prompt=result.prompt,
                 time_create=result.time_create,
+                model=result.model,
             )
 
 
