@@ -1,11 +1,12 @@
-- create tests for AI methods
-====
+- create baseadmin oauth system
 - deploy it on server
 ====
-...create system with mc-angio
+...create sync with mc-angio
 ====
-- create new models with model types, where i may add information about title, description, price
-- create use models with one to one connection with use account
-- create use account models 
-- create token system
 
+- update model AIMODEL. Create base price information
+- create user model
+- create account model with models for user
+- create wallet model for account
+- create relations between user, prompts, account, wallet
+- create b-logic for wallet (using use-ai-model)
