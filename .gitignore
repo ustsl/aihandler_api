@@ -8,7 +8,7 @@ cache/
 .venv/
 .pytest_cache/
 __pycache__/
-
+docker-compose.yaml
 
 
 # C extensions
@@ -110,7 +110,7 @@ ENV/
 # mypy
 .mypy_cache/
 
-Dockerfile
+
 .DS_Store
 *.sqlite3
 media/

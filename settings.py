@@ -23,14 +23,16 @@ DB_PASSWORD_TEST = os.getenv("DATABASE_PASSWORD_TEST")
 DB_HOST_TEST = os.getenv("DATABASE_HOST_TEST")
 DB_PORT_TEST = os.getenv("DATABASE_PORT_TEST")
 
-MAIN_DATABASE_URL = env.str(
-    "REAL_DATABASE_URL",
-    default=f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/aihandler_db",
-)
 
 TEST_DATABASE_URL = env.str(
     "TEST_DATABASE_URL",
     default=f"postgresql+asyncpg://{DB_USER_TEST}:{DB_PASSWORD_TEST}@{DB_HOST_TEST}:{DB_PORT_TEST}/aihandler_db_test",
+)
+
+
+MAIN_DATABASE_URL = env.str(
+    "REAL_DATABASE_URL",
+    default=f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/aihandler_db",
 )
 
 ALLOWED_MODELS = [

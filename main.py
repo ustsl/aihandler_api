@@ -23,8 +23,3 @@ main_api_router.include_router(prompt_router, prefix="/v1/prompts", tags=["promp
 main_api_router.include_router(query_router, prefix="/v1/queries", tags=["queries"])
 main_api_router.include_router(user_router, prefix="/v1/users", tags=["users"])
 app.include_router(main_api_router)
-
-
-# if __name__ == "__main__":
-#     # run app on the host and port
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
