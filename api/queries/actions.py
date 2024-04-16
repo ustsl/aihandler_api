@@ -1,20 +1,12 @@
-from uuid import UUID
-from typing import List
-from fastapi import HTTPException
-from api.prompts.models import GPTPromptCreate, GPTPromptShortShow, GPTPromptShow
-from db.prompts.dals import PromptDAL
+from api.prompts.actions import _show_prompt
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.utils import handle_dal_errors
-
 from modules.gpt_core import CreateGPTResponse
-from settings import OPENAI_TOKEN
 
 
 @handle_dal_errors
 async def _create_query(id: str, query: str, db: AsyncSession):
-    prompt_dal = PromptDAL(db)
-    prompt = await prompt_dal.get(id)
-
+    prompt = await _show_prompt(id, db)
     gpt = CreateGPTResponse(
         prompt=prompt.prompt,
         message=query,

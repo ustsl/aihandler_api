@@ -2,6 +2,7 @@ from sqlalchemy import Column, Boolean, DateTime
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base
 
+
 Base = declarative_base()
 
 ##############################

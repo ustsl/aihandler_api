@@ -23,7 +23,7 @@ class UserTokenModel(TimeModel):
     )
     token = Column(String, nullable=False)
     user = relationship(
-        "UserModel", back_populates="token", uselist=False, cascade="all, delete-orphan"
+        "UserModel", back_populates="token", uselist=False, cascade="all"
     )
 
 

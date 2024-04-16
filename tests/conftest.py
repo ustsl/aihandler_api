@@ -11,7 +11,7 @@ from sqlalchemy.pool import NullPool
 
 
 from db.session import get_db
-from settings import TEST_DATABASE_URL
+from settings import TEST_DATABASE_URL, SERVICE_TOKEN
 from db.models import Base
 
 
@@ -27,6 +27,8 @@ async_session_maker = sessionmaker(
     engine_test, class_=AsyncSession, expire_on_commit=False
 )
 metadata.bind = engine_test
+
+HEADERS = {"Authorization": SERVICE_TOKEN}
 
 
 async def override_get_async_session() -> AsyncGenerator[AsyncSession, None]:
@@ -62,3 +64,44 @@ client = TestClient(app)
 async def ac() -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(app=app, base_url="http://test/") as ac:
         yield ac
+
+
+@pytest.fixture(scope="session")
+def user_data():
+    # Create a user with a predefined Telegram ID
+    user_data_create = client.post(
+        "v1/users/",
+        json={"telegram_id": "12345"},
+        headers=HEADERS,
+    )
+    assert user_data_create.status_code == 200, "Failed to create user"
+    user_data_create_json = user_data_create.json()
+
+    # Retrieve the user data using the Telegram ID
+    user_data_response = client.get(
+        f'v1/users/{user_data_create_json.get("telegram_id")}',
+        headers=HEADERS,
+    )
+    assert user_data_response.status_code == 200, "Failed to fetch user data"
+    user_data_json = user_data_response.json()
+
+    return user_data_json
+
+
+@pytest.fixture(scope="session")
+async def prompt_data(user_data):
+    account_id = user_data.get("accounts").get("account_id")
+
+    # Create a new prompt
+    prompt_result = client.post(
+        "v1/prompts/",
+        json={
+            "title": "Translator",
+            "description": "Test descr",
+            "prompt": "Get word on Turkish, and translate this word to English. Return only the word in English. More - nothing",
+            "model": "gpt-3.5-turbo",
+            "account_id": account_id,
+        },
+        headers=HEADERS,
+    )
+    return prompt_result.json()

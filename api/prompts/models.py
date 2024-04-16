@@ -17,6 +17,7 @@ class GPTPromptBase(BaseModel):
     description: str
     prompt: str
     model: str
+    account_id: str
 
     @field_validator("model")
     def validate_model(cls, value):

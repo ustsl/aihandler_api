@@ -1,27 +1,17 @@
-from tests.conftest import client
+from tests.conftest import HEADERS, client
 
 
-async def test_gpt_query():
+async def test_gpt_query(prompt_data):
 
-    result = client.post(
-        "v1/prompts/",
-        json={
-            "title": "Translator",
-            "description": "Test descr",
-            "prompt": "Get word on turkish, an translate on engilsh (etmek=>eat). Return only word in english. More - nothing",
-            "model": "gpt-3.5-turbo",
-        },
-    )
-
-    post_data = result.json()
+    # Execute a query
     response = client.post(
         "v1/queries/",
         json={
-            "prompt_id": post_data.get("id"),
+            "prompt_id": prompt_data.get("id"),
             "query": "merhaba",
         },
+        headers=HEADERS,
     )
-
     data = response.json()
     result = data.get("result")
     assert str(result.lower()) == "hello"
