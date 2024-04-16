@@ -15,6 +15,12 @@ class MaintenanceModel(Base):
 
     is_active = Column(Boolean(), default=True)
     is_deleted = Column(Boolean(), default=False)
+
+
+class TimeModel(Base):
+
+    __abstract__ = True
+
     time_create = Column(DateTime(timezone=True), default=func.now())
     time_update = Column(
         DateTime(timezone=True), default=func.now(), onupdate=func.now()

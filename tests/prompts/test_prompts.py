@@ -1,12 +1,6 @@
 from tests.conftest import client
 
 
-def test_register():
-    response = client.get("v1/prompts")
-
-    print(response.json())
-
-
 async def test_add_data():
 
     response = client.get("v1/prompts/")

@@ -28,6 +28,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 from db.prompts.models import PromptModel
+from db.users.models import UserModel, UserTokenModel, UserAccountModel
 
 target_metadata = Base.metadata
 

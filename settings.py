@@ -8,6 +8,7 @@ env = Env()
 load_dotenv()
 
 OPENAI_TOKEN = os.getenv("OPENAI_TOKEN")
+SERVICE_TOKEN = os.getenv("SERVICE_TOKEN")
 
 DB_NAME = os.getenv("DATABASE_NAME")
 DB_USER = os.getenv("DATABASE_USER")
