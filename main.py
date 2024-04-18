@@ -8,12 +8,23 @@ from api.users.handlers import user_router
 
 from api.utils import verify_token
 
+from starlette.middleware.cors import CORSMiddleware
+
 #########################
 # BLOCK WITH API ROUTES #
 #########################
 
 # create instance of the app
 app = FastAPI(title="ai_handler")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "https://mc-angio.ru"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # create the instance for the routes
 main_api_router = APIRouter(dependencies=[Depends(verify_token)])
