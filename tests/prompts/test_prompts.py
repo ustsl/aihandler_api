@@ -1,26 +1,28 @@
-from tests.conftest import HEADERS, client
+from tests.conftest import client
 
 
-async def test_len_data():
+async def test_len_data(user_data):
 
+    headers = {"Authorization": user_data.get("token").get("token")}
+    query = f"v1/prompts/{user_data.get("telegram_id")}"
     response = client.get(
-        "v1/prompts/",
-        headers=HEADERS,
+        query,
+        headers=headers,
     )
 
     assert response.status_code == 200
     assert len(response.json()) == 0
 
 
-async def test_found_not_found_prompt_status(prompt_data):
+async def test_found_not_found_prompt_status(prompt_data, user_data):
+    headers = {"Authorization": user_data.get("token").get("token")}
     response = client.get(
-        "v1/prompts/b35273d1-e135-43e3-aae5-c9997276479d",
-        headers=HEADERS,
+        f'v1/prompts/{user_data.get("telegram_id")}/b35273d1-e135-43e3-aae5-c9997276479d',
+        headers=headers,
     )
     assert response.status_code == 404
-
     response = client.get(
-        f'v1/prompts/{prompt_data.get("id")}',
-        headers=HEADERS,
+        f'v1/prompts/{user_data.get("telegram_id")}/{prompt_data.get("id")}',
+        headers=headers,
     )
     assert response.status_code == 200

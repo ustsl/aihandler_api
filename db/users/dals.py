@@ -18,7 +18,6 @@ from db.users.models import UserAccountModel, UserModel, UserTokenModel
 class UsersDAL(BaseDAL):
 
     async def create(self, **data):
-
         try:
             obj = self.model(**data)
             self.db_session.add(obj)

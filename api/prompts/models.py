@@ -36,15 +36,20 @@ class GPTPromptBase(BaseModel):
 
 
 class GPTPromptShortShow(GPTPromptBase):
-    id: uuid.UUID
-    time_create: datetime
+    telegram_id: str
 
 
 class GPTPromptShow(GPTPromptShortShow):
     is_active: bool
     time_update: datetime
-    model: str
+    telegram_id: str
+    is_open: bool
 
 
 class GPTPromptCreate(GPTPromptBase):
     pass
+
+
+class GPTCreateShow(BaseModel):
+    id: uuid.UUID
+    time_create: datetime

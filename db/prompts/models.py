@@ -1,5 +1,5 @@
 import uuid
-
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy import Column, ForeignKey, Numeric, String, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship

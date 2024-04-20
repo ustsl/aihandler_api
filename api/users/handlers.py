@@ -5,11 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.users.actions import _create_new_user, _get_user
 from api.prompts.models import GPTPromptCreate, GPTPromptShortShow, GPTPromptShow
 
+from api.utils import verify_token
 from db.session import get_db
 
 from api.users.models import UserDataBase, UserDataExtend, UserDataWithId
 
-user_router = APIRouter()
+user_router = APIRouter(dependencies=[Depends(verify_token)])
 
 
 @user_router.post("/", response_model=UserDataWithId)

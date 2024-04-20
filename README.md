@@ -10,3 +10,4 @@
     - target_metadata = Base.metadata
 - alembic revision --autogenerate -m "comment"
 - alembic upgrade heads
+- uvicorn main:app --reload

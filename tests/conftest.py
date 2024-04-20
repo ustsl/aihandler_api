@@ -89,12 +89,15 @@ def user_data():
 
 
 @pytest.fixture(scope="session")
-async def prompt_data(user_data):
-    account_id = user_data.get("accounts").get("account_id")
+def prompt_data(user_data):
 
-    # Create a new prompt
+    account_id = user_data.get("accounts").get("account_id")
+    telegram_id = user_data.get("telegram_id")
+    token = user_data.get("token").get("token")
+    headers = {"Authorization": token}
+
     prompt_result = client.post(
-        "v1/prompts/",
+        f"v1/prompts/{telegram_id}",
         json={
             "title": "Translator",
             "description": "Test descr",
@@ -102,6 +105,7 @@ async def prompt_data(user_data):
             "model": "gpt-3.5-turbo",
             "account_id": account_id,
         },
-        headers=HEADERS,
+        headers=headers,
     )
+
     return prompt_result.json()

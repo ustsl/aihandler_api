@@ -48,6 +48,7 @@ class BaseDAL:
             )
             db_query_result = await self.db_session.execute(query)
             prompt = db_query_result.scalar_one()
+
             return prompt
         except NoResultFound:
             return {"error": "Prompt not found", "status": 404}
