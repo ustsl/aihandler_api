@@ -9,7 +9,7 @@ from api.prompts.actions import (
     _show_prompts,
     _update_prompt,
 )
-from api.prompts.models import GPTPromptCreate, GPTPromptShow, GPTPromptBase
+from api.prompts.models import GPTPromptCreate, GPTPromptBase
 
 from api.utils import verify_user_data
 from db.session import get_db
