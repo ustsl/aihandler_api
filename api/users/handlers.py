@@ -1,9 +1,6 @@
-from uuid import UUID
-from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.users.actions import _create_new_user, _get_user
-from api.prompts.models import GPTPromptCreate, GPTPromptShortShow, GPTPromptShow
 
 from api.utils import verify_token
 from db.session import get_db

@@ -1,5 +1,3 @@
-- renaming, refactoring
-- create relations and b-logic between user wallet and service wallet
 - create new test functions on wallet
 - create new test functions on put and another method
 - create tests on access

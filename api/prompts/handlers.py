@@ -9,12 +9,7 @@ from api.prompts.actions import (
     _show_prompts,
     _update_prompt,
 )
-from api.prompts.models import (
-    GPTPromptCreate,
-    GPTPromptShortShow,
-    GPTPromptShow,
-    GPTCreateShow,
-)
+from api.prompts.models import GPTPromptCreate, GPTPromptShow, GPTPromptBase
 
 from api.utils import verify_user_data
 from db.session import get_db
@@ -22,10 +17,10 @@ from db.session import get_db
 prompt_router = APIRouter(dependencies=[Depends(verify_user_data)])
 
 
-@prompt_router.post("/", response_model=GPTCreateShow)
+@prompt_router.post("/", response_model=GPTPromptCreate)
 async def create_prompt(
-    body: GPTPromptCreate, db: AsyncSession = Depends(get_db)
-) -> GPTCreateShow:
+    body: GPTPromptBase, db: AsyncSession = Depends(get_db)
+) -> GPTPromptCreate:
     return await _create_new_prompt(body, db)
 
 

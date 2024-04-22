@@ -7,7 +7,7 @@ from api.users.models import (
     UserDataWithId,
 )
 from api.utils import handle_dal_errors
-from db.users.dals import UsersDAL
+from db.users.dals.base import UsersDAL
 from db.users.models import UserModel
 from sqlalchemy.ext.asyncio import AsyncSession
 

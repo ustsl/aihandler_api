@@ -1,12 +1,11 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.queries.actions import _create_query
 from api.queries.models import UserQueryBase, UserQueryResult
 
-from api.utils import verify_token, verify_user_data
+from api.utils import verify_user_data
 from db.session import get_db
-from db.users.dals import UsersDAL
 
 
 query_router = APIRouter(dependencies=[Depends(verify_user_data)])

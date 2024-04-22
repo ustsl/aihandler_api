@@ -3,9 +3,8 @@ from typing import List
 from fastapi import HTTPException
 from api.prompts.models import (
     GPTPromptCreate,
-    GPTPromptShortShow,
+    GPTPromptBase,
     GPTPromptShow,
-    GPTCreateShow,
 )
 from db.prompts.dals import PromptDAL
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -13,18 +12,19 @@ from api.utils import handle_dal_errors
 from db.prompts.models import PromptModel
 
 
-async def _create_new_prompt(body: GPTPromptCreate, db) -> GPTCreateShow:
+async def _create_new_prompt(body: GPTPromptBase, db) -> GPTPromptCreate:
     async with db as session:
         async with session.begin():
             obj_dal = PromptDAL(session, PromptModel)
             result = await obj_dal.create(**body.model_dump())
             if isinstance(result, dict) and result.get("error"):
                 raise HTTPException(status_code=500, detail=result["error"])
-            return GPTCreateShow(id=result.uuid, time_create=result.time_create)
+
+            return GPTPromptCreate(id=result.uuid, time_create=result.time_create)
 
 
 @handle_dal_errors
-async def _show_prompts(db: AsyncSession) -> List[GPTPromptShortShow]:
+async def _show_prompts(db: AsyncSession) -> List[GPTPromptShow]:
     obj_dal = PromptDAL(db, PromptModel)
     results = await obj_dal.list()
     return results

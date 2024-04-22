@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from functools import wraps
 
 from fastapi import Request, HTTPException, status, Depends
-from db.users.dals import UsersDAL
+from db.users.dals.base import UsersDAL
 from db.users.models import UserModel
 from settings import SERVICE_TOKEN
 
