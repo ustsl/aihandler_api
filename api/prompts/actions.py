@@ -4,12 +4,16 @@ from fastapi import HTTPException
 from api.prompts.models import (
     GPTPromptCreate,
     GPTPromptBase,
+    GPTPromptList,
     GPTPromptShow,
 )
+from api.users.actions import _get_user_account
 from db.prompts.dals import PromptDAL
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.utils import handle_dal_errors
 from db.prompts.models import PromptModel
+from db.users.dals.base import UsersDAL
+from db.users.models import UserModel
 
 
 async def _create_new_prompt(body: GPTPromptBase, db) -> GPTPromptCreate:
@@ -24,9 +28,14 @@ async def _create_new_prompt(body: GPTPromptBase, db) -> GPTPromptCreate:
 
 
 @handle_dal_errors
-async def _show_prompts(db: AsyncSession) -> List[GPTPromptShow]:
+async def _show_prompts(
+    db: AsyncSession, telegram_id: str = None, offset: int = 0, search_query: str = None
+) -> GPTPromptList:
+    account = await _get_user_account(telegram_id=telegram_id, db=db)
     obj_dal = PromptDAL(db, PromptModel)
-    results = await obj_dal.list()
+    results = await obj_dal.list(
+        account_id=account.account_id, offset=offset, search_query=search_query
+    )
     return results
 
 
@@ -41,8 +50,9 @@ async def _show_prompt(
         return prompt
 
     if prompt.is_open == True or (telegram_id == prompt.account.user.telegram_id):
+
         return GPTPromptShow(
-            id=prompt.uuid,
+            uuid=prompt.uuid,
             title=prompt.title,
             description=prompt.description,
             model=prompt.model,

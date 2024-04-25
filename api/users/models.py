@@ -32,3 +32,7 @@ class AccountData(BaseModel):
 class UserDataExtend(UserDataWithId):
     token: TokenData
     account: AccountData
+
+
+class UserBalance(BaseModel):
+    balance: float

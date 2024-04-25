@@ -1,7 +1,9 @@
 from tests.conftest import client
 
 
-async def test_len_data(user_data):
+async def test_len_data(user_data_with_prompt):
+
+    user_data = user_data_with_prompt
 
     headers = {"Authorization": user_data.get("token").get("token")}
     query = f"v1/prompts/{user_data.get("telegram_id")}"
@@ -14,7 +16,10 @@ async def test_len_data(user_data):
     assert len(response.json()) == 0
 
 
-async def test_found_not_found_prompt_status(prompt_data, user_data):
+async def test_found_not_found_prompt_status(prompt_data, user_data_with_prompt):
+
+    user_data = user_data_with_prompt
+
     headers = {"Authorization": user_data.get("token").get("token")}
     response = client.get(
         f'v1/prompts/{user_data.get("telegram_id")}/b35273d1-e135-43e3-aae5-c9997276479d',

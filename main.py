@@ -41,9 +41,7 @@ app.add_middleware(
 main_api_router = APIRouter()
 
 # set routes to the app instance
-main_api_router.include_router(
-    prompt_router, prefix="/v1/prompts/{telegram_id}", tags=["prompts"]
-)
+main_api_router.include_router(prompt_router, prefix="/v1/prompts", tags=["prompts"])
 main_api_router.include_router(
     query_router, prefix="/v1/queries/{telegram_id}", tags=["queries"]
 )

@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.users.actions import _create_new_user, _get_user
+from api.users.actions import _create_new_user, _get_user, _update_user_account_balance
 
 from api.utils import verify_token
 from db.session import get_db
 
-from api.users.models import UserDataBase, UserDataExtend, UserDataWithId
+from api.users.models import UserBalance, UserDataBase, UserDataExtend, UserDataWithId
 
 user_router = APIRouter(dependencies=[Depends(verify_token)])
 
@@ -27,4 +27,12 @@ async def get_user(
 @user_router.get("/{telegram_id}")
 async def get_user(telegram_id: str, db: AsyncSession = Depends(get_db)):
     res = await _get_user(telegram_id, db)
+    return res
+
+
+@user_router.put("/{telegram_id}/balance")
+async def update_prompt(
+    telegram_id: str, balance: UserBalance, db: AsyncSession = Depends(get_db)
+):
+    res = await _update_user_account_balance(telegram_id, balance, db)
     return res

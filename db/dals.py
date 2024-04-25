@@ -25,12 +25,14 @@ class BaseDAL:
             error_msg = f"Error creating prompt: {str(e)}"
             return {"error": error_msg}
 
-    async def list(self):
+    async def list(self, page_size: int = 1, offset: int = 0):
         try:
             query = (
                 select(self.model)
                 .where(self.model.is_active == True, self.model.is_deleted == False)
                 .order_by(desc(self.model.time_update))
+                .limit(page_size)
+                .offset(offset)
             )
             db_query_result = await self.db_session.execute(query)
             result = db_query_result.scalars().all()

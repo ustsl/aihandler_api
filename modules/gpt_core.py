@@ -41,7 +41,7 @@ class CreateGPTQuery:
             )
             response.raise_for_status()
             completion = response.json()
-            print(completion)
+
             self._result = completion["choices"][0]["message"]["content"]
             usage = completion.get("usage")
             if usage:

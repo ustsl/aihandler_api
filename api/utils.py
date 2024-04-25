@@ -43,10 +43,7 @@ async def verify_user_data(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
         if str(user.token.token) != token:
-            print(user.token.token)
-            print(token)
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid or missing token",
             )
-    print("Done")

@@ -1,5 +1,5 @@
 import re
-from typing import Literal
+from typing import List, Literal
 import uuid
 from datetime import datetime
 from fastapi import HTTPException
@@ -17,7 +17,7 @@ class GPTPromptBase(BaseModel):
     description: str
     prompt: str
     model: str
-    account_id: str
+    account_id: uuid.UUID
 
     @field_validator("model")
     def validate_model(cls, value):
@@ -41,8 +41,12 @@ class GPTPromptCreate(BaseModel):
 
 
 class GPTPromptShow(GPTPromptBase):
-    id: uuid.UUID
+    uuid: uuid.UUID
     is_active: bool
     time_update: datetime
-    telegram_id: str
     is_open: bool
+
+
+class GPTPromptList(BaseModel):
+    total: int
+    result: List[GPTPromptShow]

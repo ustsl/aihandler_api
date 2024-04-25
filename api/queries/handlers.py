@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.queries.actions import _create_query
 from api.queries.models import UserQueryBase, UserQueryResult
 
+from api.users.actions import _get_user
 from api.utils import verify_user_data
 from db.session import get_db
 
@@ -21,4 +22,7 @@ async def create_query(
     res = await _create_query(
         prompt_id=body.prompt_id, telegram_id=telegram_id, query=body.query, db=db
     )
+
+    user = await _get_user(telegram_id=telegram_id, db=db)
+
     return res
