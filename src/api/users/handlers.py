@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.users.actions import (
     _create_new_user,
     _get_user,
+    _get_users,
     _update_user_account_balance,
 )
 from src.api.utils import verify_token
@@ -26,11 +27,9 @@ async def create_user(
     return await _create_new_user(body, db)
 
 
-@user_router.get("/", response_model=UserDataExtend)
-async def get_user(
-    body: UserDataBase, db: AsyncSession = Depends(get_db)
-) -> UserDataExtend:
-    return await _create_new_user(body, db)
+@user_router.get("/")
+async def get_users(db: AsyncSession = Depends(get_db)):
+    return await _get_users(db)
 
 
 @user_router.get("/{telegram_id}")

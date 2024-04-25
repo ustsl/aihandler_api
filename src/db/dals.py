@@ -30,7 +30,7 @@ class BaseDAL:
             query = (
                 select(self.model)
                 .where(self.model.is_active == True, self.model.is_deleted == False)
-                .order_by(desc(self.model.time_update))
+                .order_by(desc(self.model.uuid))
                 .limit(page_size)
                 .offset(offset)
             )

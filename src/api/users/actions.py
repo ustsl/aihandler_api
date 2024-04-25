@@ -37,6 +37,13 @@ async def _get_user(telegram_id: str, db: AsyncSession) -> UserDataExtend:
 
 
 @handle_dal_errors
+async def _get_users(db: AsyncSession):
+    obj_dal = UsersDAL(db, UserModel)
+    result = await obj_dal.list()
+    return result
+
+
+@handle_dal_errors
 async def _get_user_account(telegram_id: str, db: AsyncSession) -> AccountData:
     user = await _get_user(telegram_id=telegram_id, db=db)
     return user.accounts
