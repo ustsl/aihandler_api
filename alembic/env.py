@@ -28,8 +28,9 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
-from db.prompts.models import PromptModel
-from db.users.models import UserModel, UserTokenModel, UserAccountModel
+from src.db.prompts.models import PromptModel
+from src.db.users.models import UserModel, UserTokenModel, UserAccountModel
+from src.db.queries.models import QueryModel
 
 target_metadata = Base.metadata
 
