@@ -1,8 +1,8 @@
 import re
-from typing import List, Literal
+from typing import List
 import uuid
 from datetime import datetime
-from fastapi import HTTPException
+
 from pydantic import BaseModel, EmailStr, field_validator
 
 from settings import ALLOWED_MODELS
@@ -17,7 +17,7 @@ class GPTPromptBase(BaseModel):
     description: str
     prompt: str
     model: str
-    account_id: uuid.UUID
+    is_open: bool
 
     @field_validator("model")
     def validate_model(cls, value):
@@ -44,7 +44,7 @@ class GPTPromptShow(GPTPromptBase):
     uuid: uuid.UUID
     is_active: bool
     time_update: datetime
-    is_open: bool
+    account_id: uuid.UUID  # type: ignore
 
 
 class GPTPromptList(BaseModel):

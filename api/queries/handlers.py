@@ -23,6 +23,4 @@ async def create_query(
         prompt_id=body.prompt_id, telegram_id=telegram_id, query=body.query, db=db
     )
 
-    user = await _get_user(telegram_id=telegram_id, db=db)
-
     return res

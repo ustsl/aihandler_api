@@ -48,4 +48,4 @@ async def _create_query(prompt_id: str, telegram_id: str, query: str, db: AsyncS
                             return gpt_res
                 else:
                     return {"error": "wallet it empty", "status": 403}
-                return {"result": "ommm"}
+                return {"result": "fail", "error": 500}

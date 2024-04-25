@@ -133,6 +133,7 @@ def prompt_data(user_data_with_prompt):
             "prompt": "Get word on Turkish, and translate this word to English. Return only the word in English. More - nothing",
             "model": "gpt-3.5-turbo",
             "account_id": account_id,
+            "is_open": True,
         },
         headers=headers,
     )

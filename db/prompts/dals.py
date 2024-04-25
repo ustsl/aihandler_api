@@ -42,15 +42,21 @@ class PromptDAL(BaseDAL):
         offset: int = 0,
         account_id: uuid.UUID = None,
         search_query: str = None,
+        only_yours: bool = True,
     ):
         try:
             conditions = [
                 self.model.is_active == True,
                 self.model.is_deleted == False,
-                or_(self.model.is_open == True, self.model.account_id == account_id),
             ]
             if search_query:
                 conditions.append(self.model.title.ilike(f"%{search_query}%"))
+            if only_yours:
+                conditions.append(self.model.account_id == account_id)
+            else:
+                conditions.append(
+                    or_(self.model.is_open == True, self.model.account_id == account_id)
+                )
 
             query = (
                 select(self.model)

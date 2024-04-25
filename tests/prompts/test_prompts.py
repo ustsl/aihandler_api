@@ -13,7 +13,7 @@ async def test_len_data(user_data_with_prompt):
     )
 
     assert response.status_code == 200
-    assert len(response.json()) == 0
+    assert len(response.json().get("result")) == 0
 
 
 async def test_found_not_found_prompt_status(prompt_data, user_data_with_prompt):

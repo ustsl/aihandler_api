@@ -6,7 +6,7 @@ def test_gpt_query(prompt_data, user_data_with_money):
 
     headers = {"Authorization": user_data.get("token").get("token")}
     query = f"v1/queries/{user_data.get("telegram_id")}"
-    
+
     response = client.post(
         query,
         json={
@@ -23,14 +23,13 @@ def test_gpt_query(prompt_data, user_data_with_money):
     print(user_data.get("accounts").get("balance"))
 
 
-
 def test_gpt_query_no_balance(prompt_data, user_data_with_prompt):
 
     user_data = user_data_with_prompt
 
     headers = {"Authorization": user_data.get("token").get("token")}
     query = f"v1/queries/{user_data.get("telegram_id")}"
-    
+
     response = client.post(
         query,
         json={
