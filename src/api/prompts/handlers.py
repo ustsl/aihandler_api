@@ -2,18 +2,18 @@ from uuid import UUID
 from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.prompts.actions import (
+from src.api.prompts.actions import (
     _create_new_prompt,
     _delete_prompt,
     _show_prompt,
     _show_prompts,
     _update_prompt,
 )
-from api.prompts.models import GPTPromptCreate, GPTPromptBase, GPTPromptList
+from src.api.prompts.models import GPTPromptCreate, GPTPromptBase, GPTPromptList
 
-from api.users.actions import _get_user_account
-from api.utils import verify_user_data
-from db.session import get_db
+from src.api.users.actions import _get_user_account
+from src.api.utils import verify_user_data
+from src.db.session import get_db
 
 prompt_router = APIRouter(dependencies=[Depends(verify_user_data)])
 

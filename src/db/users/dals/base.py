@@ -1,18 +1,17 @@
-from db.dals import BaseDAL
+from src.db.dals import BaseDAL
 
 ###########################################################
 # BLOCK FOR INTERACTION WITH DATABASE IN BUSINESS CONTEXT #
 ###########################################################
 
-
-from sqlalchemy import select, update
+from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import DeclarativeMeta
+
 import uuid
 from decimal import Decimal
 from sqlalchemy.orm import joinedload
-from db.users.models import UserAccountModel, UserModel, UserTokenModel
+
+from src.db.users.models import UserAccountModel, UserTokenModel
 
 
 class UsersDAL(BaseDAL):

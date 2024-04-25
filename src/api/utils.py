@@ -2,11 +2,14 @@ from fastapi import HTTPException
 from functools import wraps
 
 from fastapi import Request, HTTPException, status, Depends
-from db.users.dals.base import UsersDAL
-from db.users.models import UserModel
-from settings import SERVICE_TOKEN
 
-from db.session import get_db
+from src.settings import SERVICE_TOKEN
+
+from src.db.users.dals.base import UsersDAL
+from src.db.users.models import UserModel
+
+from src.db.session import get_db
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 

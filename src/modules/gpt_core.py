@@ -1,7 +1,7 @@
 import httpx
 from fastapi import HTTPException
 
-from settings import OPENAI_TOKEN
+from src.settings import OPENAI_TOKEN
 
 
 class GptCalculator:

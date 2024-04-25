@@ -1,16 +1,16 @@
 from fastapi import HTTPException
-from api.users.models import (
+from src.api.users.models import (
     AccountData,
-    TokenData,
     UserBalance,
     UserDataBase,
     UserDataExtend,
     UserDataWithId,
 )
-from api.utils import handle_dal_errors
-from db.users.dals.admin import AdminUserAccountDal
-from db.users.dals.base import UsersDAL
-from db.users.models import UserAccountModel, UserModel
+from src.api.utils import handle_dal_errors
+from src.db.users.dals.admin import AdminUserAccountDal
+from src.db.users.dals.base import UsersDAL
+from src.db.users.models import UserAccountModel, UserModel
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, field_validator
 
-from settings import ALLOWED_MODELS
+from src.settings import ALLOWED_MODELS
 
 #########################
 # BLOCK WITH API MODELS #

@@ -1,13 +1,16 @@
-from api.prompts.actions import _show_prompt
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.users.actions import _get_user
-from api.utils import handle_dal_errors
-from modules.gpt_core import CreateGPTResponse
-from db.users.dals.transaction import (
+
+from src.api.prompts.actions import _show_prompt
+from src.api.users.actions import _get_user
+from src.api.utils import handle_dal_errors
+
+from src.db.users.dals.transaction import (
     MoneyTransactionUserDal,
     MoneyTransactionRecipientDAL,
 )
-from db.users.models import UserAccountModel
+from src.db.users.models import UserAccountModel
+
+from src.modules.gpt_core import CreateGPTResponse
 
 
 @handle_dal_errors

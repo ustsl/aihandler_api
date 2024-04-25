@@ -10,12 +10,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
 
-from db.session import get_db
-from settings import TEST_DATABASE_URL, SERVICE_TOKEN
-from db.models import Base
+from src.db.session import get_db
+from src.settings import TEST_DATABASE_URL, SERVICE_TOKEN
+from src.db.models import Base
 
 
-from main import app
+from src.main import app
 
 # DATABASE
 

@@ -1,12 +1,9 @@
-==
-
-- create search view with pagination
-- create base admin functions: block user, block prompt
-- test restrictions (blocked acc)
-
-==
-
+- update production and update current mc-angio block
 - create base telegram interface 
+- create base admin functions: block user, block prompt
+- create admin-actions for current_functions (make throw getting user_data and using it for next actions)
+- update tests for another admin methods
+- test restrictions (blocked acc)
 
 ==
 

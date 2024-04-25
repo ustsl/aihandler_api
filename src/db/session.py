@@ -4,7 +4,7 @@ from typing import Generator
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-from settings import MAIN_DATABASE_URL
+from src.settings import MAIN_DATABASE_URL
 
 ##############################################
 # BLOCK FOR COMMON INTERACTION WITH DATABASE #

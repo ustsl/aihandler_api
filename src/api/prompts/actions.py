@@ -1,19 +1,20 @@
 from uuid import UUID
 from typing import List
 from fastapi import HTTPException, status
-from api.prompts.models import (
+
+from src.api.utils import handle_dal_errors
+
+from src.api.prompts.models import (
     GPTPromptCreate,
     GPTPromptBase,
     GPTPromptList,
     GPTPromptShow,
 )
-from api.users.actions import _get_user_account
-from db.prompts.dals import PromptDAL
+from src.api.users.actions import _get_user_account
+from src.db.prompts.dals import PromptDAL
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.utils import handle_dal_errors
-from db.prompts.models import PromptModel
-from db.users.dals.base import UsersDAL
-from db.users.models import UserModel
+
+from src.db.prompts.models import PromptModel
 
 
 @handle_dal_errors

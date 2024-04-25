@@ -1,7 +1,9 @@
 from sqlalchemy import Column, Numeric, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from db.models import TimeModel, MaintenanceModel
+
+from src.db.models import TimeModel, MaintenanceModel
+
 import uuid
 
 
