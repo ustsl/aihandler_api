@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 
 from src.api.utils import handle_dal_errors
 
-from src.api.prompts.models import (
+from src.api.prompts.schemas import (
     GPTPromptCreate,
     GPTPromptBase,
     GPTPromptList,

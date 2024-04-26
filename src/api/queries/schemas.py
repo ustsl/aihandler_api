@@ -1,4 +1,4 @@
-import uuid
+from uuid import UUID
 from pydantic import BaseModel, EmailStr, field_validator
 
 #########################
@@ -7,7 +7,7 @@ from pydantic import BaseModel, EmailStr, field_validator
 
 
 class UserQueryBase(BaseModel):
-    prompt_id: uuid.UUID
+    prompt_id: UUID
     query: str
 
     @field_validator("query")
@@ -20,3 +20,8 @@ class UserQueryBase(BaseModel):
 class UserQueryResult(BaseModel):
     result: str
     cost: float = None
+
+
+class UserQueryStore(UserQueryBase):
+    user_id: UUID
+    result: str

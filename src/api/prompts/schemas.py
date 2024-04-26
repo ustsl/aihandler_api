@@ -1,6 +1,6 @@
 import re
 from typing import List
-import uuid
+from uuid import UUID
 from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, field_validator
@@ -36,15 +36,15 @@ class GPTPromptBase(BaseModel):
 
 
 class GPTPromptCreate(BaseModel):
-    id: uuid.UUID
+    id: UUID
     time_create: datetime
 
 
 class GPTPromptShow(GPTPromptBase):
-    uuid: uuid.UUID
+    uuid: UUID
+    account_id: UUID
     is_active: bool
     time_update: datetime
-    account_id: uuid.UUID  # type: ignore
 
 
 class GPTPromptList(BaseModel):

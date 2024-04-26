@@ -10,7 +10,7 @@ from src.api.users.actions import (
 from src.api.utils import verify_token
 from src.db.session import get_db
 
-from src.api.users.models import (
+from src.api.users.schemas import (
     UserBalance,
     UserDataBase,
     UserDataExtend,

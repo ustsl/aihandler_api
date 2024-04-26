@@ -6,9 +6,10 @@ from sqlalchemy.orm import relationship
 
 from src.db.models import MaintenanceModel, TimeModel
 
-##############################
-# BLOCK WITH DATABASE MODELS #
-##############################
+
+################################
+###BLOCK WITH DATABASE MODELS###
+################################
 
 
 class PromptModel(MaintenanceModel, TimeModel):
@@ -28,3 +29,4 @@ class PromptModel(MaintenanceModel, TimeModel):
 
     # Отношение, указывающее на аккаунт, к которому привязан промпт
     account = relationship("UserAccountModel", back_populates="prompts")
+    queries = relationship("QueryModel", back_populates="prompt")

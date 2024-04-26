@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from src.api.users.models import (
+from src.api.users.schemas import (
     AccountData,
     UserBalance,
     UserDataBase,

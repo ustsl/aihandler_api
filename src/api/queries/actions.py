@@ -1,16 +1,30 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.prompts.actions import _show_prompt
-from src.api.users.actions import _get_user
+from src.api.users.actions import _get_user, _get_user_account
 from src.api.utils import handle_dal_errors
 
+from src.db.queries.models import QueryModel
 from src.db.users.dals.transaction import (
     MoneyTransactionUserDal,
     MoneyTransactionRecipientDAL,
 )
 from src.db.users.models import UserAccountModel
+from src.db.queries.dals import QueryDAL
+
 
 from src.modules.gpt_core import CreateGPTResponse
+
+from uuid import UUID
+
+
+async def _save_query(
+    user_id: UUID, prompt_id: UUID, query: str, result: str, db: AsyncSession
+):
+    query_dal = QueryDAL(db_session=db, model=QueryModel)
+    result = await query_dal.create(
+        user_id=user_id, prompt_id=prompt_id, query=query, result=result
+    )
 
 
 @handle_dal_errors
@@ -21,18 +35,14 @@ async def _create_query(prompt_id: str, telegram_id: str, query: str, db: AsyncS
             prompt = await _show_prompt(
                 prompt_id=prompt_id, telegram_id=telegram_id, db=db
             )
-
-            if prompt and prompt != 1:
+            if prompt:
                 user_obj_dal = MoneyTransactionUserDal(session, UserAccountModel)
-                check = await user_obj_dal.check_balance(
-                    user_account_id=user.accounts.account_id
-                )
-
+                check = await user_obj_dal.check_balance(user.accounts.account_id)
                 if check.get("result"):
                     gpt = CreateGPTResponse(
                         prompt=prompt.prompt,
                         message=query,
-                        model="gpt-3.5-turbo",
+                        model=prompt.model,
                     )
                     await gpt.generate()
                     gpt_res = gpt.get_result()
@@ -48,7 +58,28 @@ async def _create_query(prompt_id: str, telegram_id: str, query: str, db: AsyncS
                                 money=float(cost),
                             )
                         if send and send["status"] == 201:
+                            await _save_query(
+                                user_id=user.uuid,
+                                prompt_id=prompt_id,
+                                query=query,
+                                result=gpt_res.get("result"),
+                                db=session,
+                            )
                             return gpt_res
                 else:
                     return {"error": "wallet it empty", "status": 403}
                 return {"result": "fail", "error": 500}
+
+
+@handle_dal_errors
+async def _show_queries(
+    db: AsyncSession,
+    telegram_id: str = None,
+    offset: int = 0,
+):
+    if telegram_id:
+        user = await _get_user(telegram_id=telegram_id, db=db)
+        # TODO: create logic
+    obj_dal = QueryDAL(db, QueryModel)
+    results = await obj_dal.list(offset=offset, order_param="time_create")
+    return results

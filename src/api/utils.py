@@ -43,7 +43,8 @@ async def verify_user_data(
         user = await userDal.get(telegram_id=telegram_id)
         if not user or (isinstance(user, dict) and user.get("error")):
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
             )
         if str(user.token.token) != token:
             raise HTTPException(

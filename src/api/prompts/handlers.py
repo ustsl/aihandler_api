@@ -9,7 +9,7 @@ from src.api.prompts.actions import (
     _show_prompts,
     _update_prompt,
 )
-from src.api.prompts.models import GPTPromptCreate, GPTPromptBase, GPTPromptList
+from src.api.prompts.schemas import GPTPromptCreate, GPTPromptBase, GPTPromptList
 
 from src.api.users.actions import _get_user_account
 from src.api.utils import verify_user_data

@@ -13,6 +13,7 @@ class UserModel(MaintenanceModel):
     # back relations
     token = relationship("UserTokenModel", back_populates="user", uselist=False)
     accounts = relationship("UserAccountModel", back_populates="user", uselist=False)
+    queries = relationship("QueryModel", back_populates="user")
 
 
 class UserTokenModel(TimeModel):

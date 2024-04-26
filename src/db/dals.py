@@ -25,12 +25,11 @@ class BaseDAL:
             error_msg = f"Error creating prompt: {str(e)}"
             return {"error": error_msg}
 
-    async def list(self, page_size: int = 1, offset: int = 0):
+    async def list(self, page_size: int = 1, offset: int = 0, order_param="uuid"):
         try:
             query = (
                 select(self.model)
-                .where(self.model.is_active == True, self.model.is_deleted == False)
-                .order_by(desc(self.model.uuid))
+                .order_by(desc(getattr(self.model, order_param)))
                 .limit(page_size)
                 .offset(offset)
             )

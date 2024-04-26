@@ -1,3 +1,4 @@
+- realize query story
 - update production and update current mc-angio block
 - create base telegram interface 
 - create base admin functions: block user, block prompt

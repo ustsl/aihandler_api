@@ -39,6 +39,17 @@ class UsersDAL(BaseDAL):
             return {"error": error_msg}
 
     async def get(self, telegram_id: str):
+        query = (
+            select(self.model)
+            .options(joinedload(self.model.token), joinedload(self.model.accounts))
+            .where(
+                self.model.telegram_id == telegram_id,
+                self.model.is_deleted == False,
+            )
+        )
+        db_query_result = await self.db_session.execute(query)
+        return db_query_result.scalar_one()
+
         try:
             query = (
                 select(self.model)
