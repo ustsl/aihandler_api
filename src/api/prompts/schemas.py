@@ -18,6 +18,7 @@ class GPTPromptBase(BaseModel):
     prompt: str
     model: str
     is_open: bool
+    context_story_window: int
 
     @field_validator("model")
     def validate_model(cls, value):
@@ -32,6 +33,12 @@ class GPTPromptBase(BaseModel):
             raise ValueError(
                 "Title must consist only of letters, numbers, dashes, and underscores."
             )
+        return value
+
+    @field_validator("context_story_window")
+    def validate_context_story_window(cls, value):
+        if type(value) != int or value < 0 or value > 30:
+            raise ValueError("context_story_window must be lesser 30 and more 0")
         return value
 
 

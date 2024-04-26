@@ -24,7 +24,11 @@ async def create_query(
 ) -> UserQueryResult:
 
     res = await _create_query(
-        prompt_id=body.prompt_id, telegram_id=telegram_id, query=body.query, db=db
+        prompt_id=body.prompt_id,
+        telegram_id=telegram_id,
+        query=body.query,
+        story=body.story,
+        db=db,
     )
 
     return res

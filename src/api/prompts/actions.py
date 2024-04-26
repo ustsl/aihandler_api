@@ -75,6 +75,7 @@ async def _show_prompt(
             prompt=prompt.prompt,
             is_open=prompt.is_open,
             is_active=prompt.is_active,
+            context_story_window=prompt.context_story_window,
             time_create=prompt.time_create.isoformat(),
             time_update=prompt.time_update.isoformat(),
             telegram_id=prompt.account.user.telegram_id,

@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, ForeignKey, Numeric, String, Boolean
+from sqlalchemy import Column, ForeignKey, Numeric, String, Boolean, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -20,7 +20,7 @@ class PromptModel(MaintenanceModel, TimeModel):
     prompt = Column(String, nullable=False)
     model = Column(String, default="gpt-3.5-turbo", nullable=False)
     is_open = Column(Boolean(), default=True, nullable=True)
-
+    context_story_window = Column(Integer, default=0, nullable=True)
     account_id = Column(
         UUID(as_uuid=True), ForeignKey("accounts.account_id"), nullable=False
     )

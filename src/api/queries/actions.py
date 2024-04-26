@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.prompts.actions import _show_prompt
+from src.api.queries.modules.story_crop import story_crop_function
 from src.api.users.actions import _get_user, _get_user_account
 from src.api.utils import handle_dal_errors
 
@@ -27,14 +28,31 @@ async def _save_query(
     )
 
 
+async def _transfer_balance(user_obj_dal, account_id, cost, session):
+    decrease = await user_obj_dal.decrease_balance(float(cost))
+    if decrease.get("result"):
+        recipient_obj_dal = MoneyTransactionRecipientDAL(session, UserAccountModel)
+        send = await recipient_obj_dal.send(
+            prompt_account_id=account_id,
+            money=float(cost),
+        )
+        return send
+    return None
+
+
 @handle_dal_errors
-async def _create_query(prompt_id: str, telegram_id: str, query: str, db: AsyncSession):
+async def _create_query(
+    prompt_id: str, telegram_id: str, query: str, story: list, db: AsyncSession
+):
     async with db as session:
         async with session.begin():
             user = await _get_user(telegram_id=telegram_id, db=db)
             prompt = await _show_prompt(
                 prompt_id=prompt_id, telegram_id=telegram_id, db=db
             )
+
+            story_crop = await story_crop_function(story, prompt.context_story_window)
+
             if prompt:
                 user_obj_dal = MoneyTransactionUserDal(session, UserAccountModel)
                 check = await user_obj_dal.check_balance(user.accounts.account_id)
@@ -42,22 +60,20 @@ async def _create_query(prompt_id: str, telegram_id: str, query: str, db: AsyncS
                     gpt = CreateGPTResponse(
                         prompt=prompt.prompt,
                         message=query,
+                        story=story_crop,
                         model=prompt.model,
                     )
                     await gpt.generate()
                     gpt_res = gpt.get_result()
                     cost = gpt_res.get("cost")
                     if cost:
-                        decrease = await user_obj_dal.decrease_balance(float(cost))
-                        if decrease.get("result"):
-                            recipient_obj_dal = MoneyTransactionRecipientDAL(
-                                session, UserAccountModel
-                            )
-                            send = await recipient_obj_dal.send(
-                                prompt_account_id=prompt.account_id,
-                                money=float(cost),
-                            )
-                        if send and send["status"] == 201:
+                        decrease_proccess = await _transfer_balance(
+                            user_obj_dal=user_obj_dal,
+                            account_id=prompt.account_id,
+                            cost=cost,
+                            session=session,
+                        )
+                        if decrease_proccess and decrease_proccess.get("status") == 201:
                             await _save_query(
                                 user_id=user.uuid,
                                 prompt_id=prompt_id,

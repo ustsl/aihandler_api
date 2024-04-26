@@ -19,24 +19,28 @@ class CreateGPTQuery:
     OPENAI_API_KEY = OPENAI_TOKEN
     CLIENT = httpx.AsyncClient(timeout=60)
 
-    def __init__(self, prompt, message, model):
+    def __init__(self, prompt, message, story, model):
         self._message = message
         self._prompt = prompt
         self._model = model
         self._result = None
         self._price = None
+        self._story = story
 
     async def generate(self):
         try:
+            messages = [
+                {"role": "system", "content": self._prompt},
+                {"role": "user", "content": self._message},
+            ]
+            if self._story:
+                messages = [*messages, *self._story]
             response = await self.CLIENT.post(
                 "https://api.openai.com/v1/chat/completions",
                 headers={"Authorization": f"Bearer {self.OPENAI_API_KEY}"},
                 json={
                     "model": self._model,
-                    "messages": [
-                        {"role": "system", "content": self._prompt},
-                        {"role": "user", "content": self._message},
-                    ],
+                    "messages": messages,
                 },
             )
             response.raise_for_status()
@@ -58,5 +62,5 @@ class CreateGPTQuery:
 
 class CreateGPTResponse(CreateGPTQuery):
 
-    def __init__(self, prompt, message, model):
-        super().__init__(prompt, message, model)
+    def __init__(self, prompt, message, story, model):
+        super().__init__(prompt, message, story, model)
