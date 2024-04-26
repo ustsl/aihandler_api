@@ -134,8 +134,10 @@ def prompt_data(user_data_with_prompt):
             "model": "gpt-3.5-turbo",
             "account_id": account_id,
             "is_open": True,
+            "context_story_window": 5,
         },
         headers=headers,
     )
+    print(prompt_result.json())
 
     return prompt_result.json()

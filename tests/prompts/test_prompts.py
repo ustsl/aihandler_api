@@ -25,6 +25,7 @@ async def test_found_not_found_prompt_status(prompt_data, user_data_with_prompt)
         f'v1/prompts/{user_data.get("telegram_id")}/b35273d1-e135-43e3-aae5-c9997276479d',
         headers=headers,
     )
+    
     assert response.status_code == 404
     response = client.get(
         f'v1/prompts/{user_data.get("telegram_id")}/{prompt_data.get("id")}',
