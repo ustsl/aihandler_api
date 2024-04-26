@@ -10,7 +10,7 @@ class GptCalculator:
 
     @staticmethod
     def calc(value):
-        price = 0.05
+        price = 0.06
         total_cost = (value / 1000) * price
         return total_cost
 
