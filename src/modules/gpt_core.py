@@ -17,7 +17,7 @@ class GptCalculator:
 
 class CreateGPTQuery:
     OPENAI_API_KEY = OPENAI_TOKEN
-    CLIENT = httpx.AsyncClient()
+    CLIENT = httpx.AsyncClient(timeout=60)
 
     def __init__(self, prompt, message, model):
         self._message = message
