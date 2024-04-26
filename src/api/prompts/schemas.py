@@ -1,5 +1,5 @@
 import re
-from typing import List
+from typing import List, Optional, Union
 from uuid import UUID
 from datetime import datetime
 
@@ -18,7 +18,7 @@ class GPTPromptBase(BaseModel):
     prompt: str
     model: str
     is_open: bool
-    context_story_window: int
+    context_story_window: Optional[Union[int, None]]
 
     @field_validator("model")
     def validate_model(cls, value):
@@ -35,11 +35,11 @@ class GPTPromptBase(BaseModel):
             )
         return value
 
-    @field_validator("context_story_window")
-    def validate_context_story_window(cls, value):
-        if type(value) != int or value < 0 or value > 30:
-            raise ValueError("context_story_window must be lesser 30 and more 0")
-        return value
+    # @field_validator("context_story_window")
+    # def validate_context_story_window(cls, value):
+    #     if type(value) != int or value < 0 or value > 30:
+    #         raise ValueError("context_story_window must be lesser 30 and more 0")
+    #     return value
 
 
 class GPTPromptCreate(BaseModel):
