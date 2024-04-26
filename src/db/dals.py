@@ -1,7 +1,7 @@
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy import desc, select, update
+from sqlalchemy import desc, select, update, func
 from sqlalchemy.ext.declarative import DeclarativeMeta
 
 ###########################################################
@@ -25,7 +25,7 @@ class BaseDAL:
             error_msg = f"Error creating prompt: {str(e)}"
             return {"error": error_msg}
 
-    async def list(self, page_size: int = 1, offset: int = 0, order_param="uuid"):
+    async def list(self, page_size: int = 10, offset: int = 0, order_param="uuid"):
         try:
             query = (
                 select(self.model)
@@ -35,7 +35,13 @@ class BaseDAL:
             )
             db_query_result = await self.db_session.execute(query)
             result = db_query_result.scalars().all()
-            return result
+
+            total_count_query = select(func.count()).select_from(self.model)
+            total_count_result = await self.db_session.execute(total_count_query)
+            total_count = total_count_result.scalar()
+
+            return {"result": result, "total": total_count}
+
         except Exception as e:
             await self.db_session.rollback()
             error_msg = f"Error listing prompts: {str(e)}"
