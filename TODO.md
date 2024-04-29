@@ -6,5 +6,5 @@
 
 ==
 
-- create cryptocyrency intergration
+- create cryptocurency integration
 
