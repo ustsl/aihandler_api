@@ -9,7 +9,6 @@ def test_gpt_query(user_data_with_money, prompt_data):
 
     headers = {"Authorization": user_data.get("token").get("token")}
     query = f"v1/queries/{user_data.get("telegram_id")}"
-
     response = client.post(
         query,
         json={
@@ -18,6 +17,7 @@ def test_gpt_query(user_data_with_money, prompt_data):
         },
         headers=headers,
     )
+
 
     response = client.post(
         query,
@@ -41,14 +41,16 @@ def test_gpt_query(user_data_with_money, prompt_data):
         headers=HEADERS,
     )
     balance = response.json().get("accounts").get("balance")
-    assert balance > 999 
+    balance = float(balance)
+    assert balance > 999
     assert balance < 1000
-
 
 
 def test_gpt_query_no_balance(prompt_data, user_data_with_prompt):
 
     user_data = user_data_with_prompt
+
+    print(user_data)
 
     headers = {"Authorization": user_data.get("token").get("token")}
     query = f"v1/queries/{user_data.get("telegram_id")}"
@@ -61,5 +63,4 @@ def test_gpt_query_no_balance(prompt_data, user_data_with_prompt):
         },
         headers=headers,
     )
-
     assert response.status_code == 403

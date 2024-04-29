@@ -14,19 +14,16 @@ from src.db.users.models import UserAccountModel, UserModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-async def _create_new_user(body: UserDataBase, db) -> UserDataWithId:
+async def _create_new_user(body: UserDataBase, db) -> UserDataExtend:
     async with db as session:
         async with session.begin():
             obj_dal = UsersDAL(session, UserModel)
-            result = await obj_dal.create(telegram_id=body.telegram_id)
+            create_user_process = await obj_dal.create(telegram_id=body.telegram_id)
 
-            if isinstance(result, dict) and result.get("error"):
-                raise HTTPException(status_code=500, detail=result["error"])
-
-            return UserDataWithId(
-                id=result.uuid,
-                telegram_id=result.telegram_id,
-            )
+    get_user = await obj_dal.get(telegram_id=body.telegram_id)
+    if isinstance(get_user, dict) and get_user.get("error"):
+        raise HTTPException(status_code=500, detail=create_user_process["error"])
+    return get_user
 
 
 @handle_dal_errors

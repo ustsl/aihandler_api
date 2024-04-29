@@ -1,7 +1,6 @@
 from tests.conftest import client
 
 from tests.prompts.fixtures import *
-import pytest
 from tests.conftest import client
 
 

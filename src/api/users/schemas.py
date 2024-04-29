@@ -8,7 +8,7 @@ from pydantic import BaseModel, field_validator
 
 
 class UserDataId(BaseModel):
-    id: uuid.UUID
+    uuid: uuid.UUID
 
 
 class UserDataBase(BaseModel):
@@ -26,13 +26,15 @@ class TokenData(BaseModel):
 
 class AccountData(BaseModel):
     account_id: uuid.UUID
-    balance: str
+    balance: Decimal
 
 
 class UserDataExtend(UserDataWithId):
+
     token: TokenData
-    account: AccountData
+    accounts: AccountData
+    is_active: bool
 
 
 class UserBalance(BaseModel):
-    balance: float
+    balance: Decimal

@@ -2,13 +2,9 @@ import pytest
 from tests.conftest import client, HEADERS
 
 
-user_cache = {}
-
-
 @pytest.fixture(scope="session")
 def user_data_with_prompt():
-    if "12345" in user_cache:
-        return user_cache["12345"]
+
     # Create a user with a predefined Telegram ID
     user_data_create = client.post(
         "v1/users/",
@@ -26,15 +22,18 @@ def user_data_with_prompt():
     assert user_data_response.status_code == 200, "Failed to fetch user data"
     user_data_json = user_data_response.json()
 
-    user_cache["12345"] = user_data_json
+    client.put(
+        "v1/users/12345/balance",
+        json={"balance": 0},
+        headers=HEADERS,
+    )
 
     return user_data_json
 
 
 @pytest.fixture(scope="session")
 def user_data_with_money():
-    if "4589" in user_cache:
-        return user_cache["4589"]
+
     user_data_create = client.post(
         "v1/users/",
         json={"telegram_id": "4589"},
@@ -56,5 +55,5 @@ def user_data_with_money():
     )
     assert user_data_response.status_code == 200, "Failed to fetch user data"
     user_data_json = user_data_response.json()
-    user_cache["4589"] = user_data_json
+
     return user_data_json

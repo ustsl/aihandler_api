@@ -22,7 +22,7 @@ class UsersDAL(BaseDAL):
             self.db_session.add(obj)
             await self.db_session.flush()
 
-            new_account = UserAccountModel(user_id=obj.uuid, balance=Decimal("0.00"))
+            new_account = UserAccountModel(user_id=obj.uuid, balance=Decimal("1.00"))
             self.db_session.add(new_account)
             await self.db_session.flush()
 
