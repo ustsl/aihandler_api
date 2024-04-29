@@ -57,23 +57,28 @@ async def _create_query(
                 user_obj_dal = MoneyTransactionUserDal(session, UserAccountModel)
                 check = await user_obj_dal.check_balance(user.accounts.account_id)
                 if check.get("result"):
+
                     gpt = CreateGPTResponse(
                         prompt=prompt.prompt,
                         message=query,
                         story=story_crop,
                         model=prompt.model,
                     )
+
                     await gpt.generate()
                     gpt_res = gpt.get_result()
                     cost = gpt_res.get("cost")
                     if cost:
+
                         decrease_proccess = await _transfer_balance(
                             user_obj_dal=user_obj_dal,
                             account_id=prompt.account_id,
                             cost=cost,
                             session=session,
                         )
+
                         if decrease_proccess and decrease_proccess.get("status") == 201:
+
                             await _save_query(
                                 user_id=user.uuid,
                                 prompt_id=prompt_id,

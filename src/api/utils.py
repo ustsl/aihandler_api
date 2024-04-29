@@ -27,8 +27,7 @@ def handle_dal_errors(func):
 
 async def verify_token(request: Request):
     token = request.headers.get("Authorization")
-
-    if not token or token != SERVICE_TOKEN:
+    if token != SERVICE_TOKEN:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or missing token"
         )

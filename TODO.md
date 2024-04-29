@@ -1,7 +1,3 @@
-- create tests on story block and another
-
-==
-
 - create base telegram interface 
 - create base admin functions: block user, block prompt
 - create admin-actions for current_functions (make throw getting user_data and using it for next actions)

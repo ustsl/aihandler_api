@@ -1,6 +1,9 @@
 from tests.conftest import client
+from tests.prompts.fixtures import *
+from tests.users.fixtures import *
 
-def test_gpt_query(prompt_data, user_data_with_money):
+
+def test_gpt_query(user_data_with_money, prompt_data):
 
     user_data = user_data_with_money
 
@@ -16,11 +19,31 @@ def test_gpt_query(prompt_data, user_data_with_money):
         headers=headers,
     )
 
+    response = client.post(
+        query,
+        json={
+            "prompt_id": prompt_data.get("id"),
+            "query": "merhaba",
+        },
+        headers=headers,
+    )
+
     data = response.json()
+
     result = data.get("result")
     assert str(result.lower()) == "hello"
     assert response.status_code == 200
-    print(user_data.get("accounts").get("balance"))
+
+    query = f"v1/queries/"
+    query = f"v1/users/{user_data.get("telegram_id")}"
+    response = client.get(
+        query,
+        headers=HEADERS,
+    )
+    balance = response.json().get("accounts").get("balance")
+    assert balance > 999 
+    assert balance < 1000
+
 
 
 def test_gpt_query_no_balance(prompt_data, user_data_with_prompt):

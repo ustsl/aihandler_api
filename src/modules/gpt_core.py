@@ -17,7 +17,6 @@ class GptCalculator:
 
 class CreateGPTQuery:
     OPENAI_API_KEY = OPENAI_TOKEN
-    CLIENT = httpx.AsyncClient(timeout=60)
 
     def __init__(self, prompt, message, story, model):
         self._message = message
@@ -35,24 +34,25 @@ class CreateGPTQuery:
             ]
             if self._story:
                 messages = [*messages, *self._story]
-            response = await self.CLIENT.post(
-                "https://api.openai.com/v1/chat/completions",
-                headers={"Authorization": f"Bearer {self.OPENAI_API_KEY}"},
-                json={
-                    "model": self._model,
-                    "messages": messages,
-                },
-            )
-            response.raise_for_status()
-            completion = response.json()
+            async with httpx.AsyncClient(timeout=120) as client:
+                response = await client.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {self.OPENAI_API_KEY}"},
+                    json={
+                        "model": self._model,
+                        "messages": messages,
+                    },
+                )
+                response.raise_for_status()
+                completion = response.json()
 
-            self._result = completion["choices"][0]["message"]["content"]
-            usage = completion.get("usage")
-            if usage:
-                tokens_amount = usage.get("total_tokens")
-                if tokens_amount:
-                    c = GptCalculator()
-                    self._price = c.calc(int(tokens_amount))
+                self._result = completion["choices"][0]["message"]["content"]
+                usage = completion.get("usage")
+                if usage:
+                    tokens_amount = usage.get("total_tokens")
+                    if tokens_amount:
+                        c = GptCalculator()
+                        self._price = c.calc(int(tokens_amount))
         except httpx.HTTPStatusError as e:
             raise HTTPException(status_code=e.response.status_code, detail=str(e))
 
