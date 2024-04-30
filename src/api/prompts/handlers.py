@@ -11,7 +11,7 @@ from src.api.prompts.actions import (
 )
 from src.api.prompts.schemas import GPTPromptCreate, GPTPromptBase, GPTPromptList
 
-from src.api.users.actions import _get_user_account
+from src.api.users.actions.base_user_actions import _get_user_account
 from src.api.utils import verify_user_data
 from src.db.session import get_db
 

@@ -1,5 +1,6 @@
 from decimal import Decimal
-import uuid
+from typing import Optional
+from uuid import UUID
 from pydantic import BaseModel, field_validator
 
 #########################
@@ -8,7 +9,7 @@ from pydantic import BaseModel, field_validator
 
 
 class UserDataId(BaseModel):
-    uuid: uuid.UUID
+    uuid: UUID
 
 
 class UserDataBase(BaseModel):
@@ -19,13 +20,18 @@ class UserDataWithId(UserDataBase, UserDataId):
     pass
 
 
+class SettingsData(BaseModel):
+    uuid: UUID
+    prompt_id: Optional[UUID] = None
+
+
 class TokenData(BaseModel):
-    token_id: uuid.UUID
+    token_id: UUID
     token: str
 
 
 class AccountData(BaseModel):
-    account_id: uuid.UUID
+    account_id: UUID
     balance: Decimal
 
 
@@ -33,6 +39,7 @@ class UserDataExtend(UserDataWithId):
 
     token: TokenData
     accounts: AccountData
+    settings: SettingsData
     is_active: bool
 
 

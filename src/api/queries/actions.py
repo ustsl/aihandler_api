@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.prompts.actions import _show_prompt
 from src.api.queries.modules.story_crop import story_crop_function
-from src.api.users.actions import _get_user, _get_user_account
+from src.api.users.actions.base_user_actions import _get_user
 from src.api.utils import handle_dal_errors
 
 from src.db.queries.models import QueryModel

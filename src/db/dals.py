@@ -73,10 +73,10 @@ class BaseDAL:
             )
             await self.db_session.execute(query)
             await self.db_session.commit()
-            return {"success": "Prompt updated successfully"}
+            return {"success": "Updated successfully"}
         except Exception as e:
             await self.db_session.rollback()
-            return {"error": f"Error updating prompt: {str(e)}"}
+            return {"error": f"Error updating: {str(e)}"}
 
     async def delete(self, id: uuid.UUID):
         try:

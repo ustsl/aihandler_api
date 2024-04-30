@@ -11,7 +11,7 @@ import uuid
 from decimal import Decimal
 from sqlalchemy.orm import joinedload
 
-from src.db.users.models import UserAccountModel, UserTokenModel
+from src.db.users.models import UserAccountModel, UserTokenModel, UserSettingsModel
 
 
 class UsersDAL(BaseDAL):
@@ -30,6 +30,10 @@ class UsersDAL(BaseDAL):
             self.db_session.add(new_token)
             await self.db_session.flush()
 
+            new_settings = UserSettingsModel(user_id=obj.uuid)
+            self.db_session.add(new_settings)
+            await self.db_session.flush()
+
             return obj
         except Exception as e:
             await self.db_session.rollback()
@@ -41,7 +45,11 @@ class UsersDAL(BaseDAL):
     async def get(self, telegram_id: str):
         query = (
             select(self.model)
-            .options(joinedload(self.model.token), joinedload(self.model.accounts))
+            .options(
+                joinedload(self.model.token),
+                joinedload(self.model.accounts),
+                joinedload(self.model.settings),
+            )
             .where(
                 self.model.telegram_id == telegram_id,
                 self.model.is_deleted == False,

@@ -30,3 +30,4 @@ class PromptModel(MaintenanceModel, TimeModel):
     # Отношение, указывающее на аккаунт, к которому привязан промпт
     account = relationship("UserAccountModel", back_populates="prompts")
     queries = relationship("QueryModel", back_populates="prompt")
+    settings = relationship("UserSettingsModel", back_populates="prompt")

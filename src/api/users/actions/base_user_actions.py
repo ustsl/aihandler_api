@@ -4,7 +4,6 @@ from src.api.users.schemas import (
     UserBalance,
     UserDataBase,
     UserDataExtend,
-    UserDataWithId,
 )
 from src.api.utils import handle_dal_errors
 from src.db.users.dals.admin import AdminUserAccountDal

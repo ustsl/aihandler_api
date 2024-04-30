@@ -10,7 +10,7 @@ from src.api.prompts.schemas import (
     GPTPromptList,
     GPTPromptShow,
 )
-from src.api.users.actions import _get_user_account
+from src.api.users.actions.base_user_actions import _get_user_account
 from src.db.prompts.dals import PromptDAL
 from sqlalchemy.ext.asyncio import AsyncSession
 
