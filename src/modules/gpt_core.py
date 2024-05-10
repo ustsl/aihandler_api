@@ -30,10 +30,11 @@ class CreateGPTQuery:
         try:
             messages = [
                 {"role": "system", "content": self._prompt},
-                {"role": "user", "content": self._message},
             ]
             if self._story:
                 messages = [*messages, *self._story]
+
+            messages = [*messages, {"role": "user", "content": self._message}]
             async with httpx.AsyncClient(timeout=120) as client:
                 response = await client.post(
                     "https://api.openai.com/v1/chat/completions",
