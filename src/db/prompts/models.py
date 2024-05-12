@@ -15,7 +15,7 @@ from src.db.models import MaintenanceModel, TimeModel
 class PromptModel(MaintenanceModel, TimeModel):
     __tablename__ = "prompts"
     uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title = Column(String, nullable=False, unique=True)
+    title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     prompt = Column(String, nullable=False)
     model = Column(String, default="gpt-3.5-turbo", nullable=False)
