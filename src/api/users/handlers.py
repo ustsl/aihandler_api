@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.users.actions.base_user_actions import (
+    _block_user,
     _create_new_user,
     _get_user,
     _get_users,
@@ -39,7 +40,7 @@ async def get_user(telegram_id: str, db: AsyncSession = Depends(get_db)):
 
 
 @user_router.put("/{telegram_id}/balance")
-async def update_balance(
+async def set_user_balance(
     telegram_id: str, balance: UserBalance, db: AsyncSession = Depends(get_db)
 ):
     res = await _update_user_account_balance(telegram_id, balance, db)
@@ -47,10 +48,21 @@ async def update_balance(
 
 
 @user_router.put("/{telegram_id}/prompt")
-async def update_prompt(
+async def set_user_prompt(
     telegram_id: str, updates: dict, db: AsyncSession = Depends(get_db)
 ):
+    # This function may changes user preset prompt, its need for telegram part of app
     res = await _update_user_settings_prompt(
         telegram_id=telegram_id, prompt_id=updates.get("prompt_id"), db=db
+    )
+    return res
+
+
+@user_router.put("/{telegram_id}/block")
+async def set_block_user(
+    telegram_id: str, updates: dict, db: AsyncSession = Depends(get_db)
+):
+    res = await _block_user(
+        telegram_id=telegram_id, is_active=updates.get("is_active"), db=db
     )
     return res

@@ -57,3 +57,31 @@ def user_data_with_money():
     user_data_json = user_data_response.json()
 
     return user_data_json
+
+
+@pytest.fixture(scope="session")
+def user_data_with_block():
+
+    user_data_create = client.post(
+        "v1/users/",
+        json={"telegram_id": "505050"},
+        headers=HEADERS,
+    )
+
+    assert user_data_create.status_code == 200, "Failed to create user"
+
+    user_data_change_active = client.put(
+        "v1/users/505050/block",
+        json={"is_active": False},
+        headers=HEADERS,
+    )
+    assert user_data_change_active.status_code == 200, "Failed to change active status"
+
+    user_data_response = client.get(
+        f"v1/users/505050",
+        headers=HEADERS,
+    )
+    assert user_data_response.status_code == 200, "Failed to fetch user data"
+    user_data_json = user_data_response.json()
+
+    return user_data_json

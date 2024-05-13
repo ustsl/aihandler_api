@@ -11,6 +11,7 @@ from src.db.users.dals.base import UsersDAL
 from src.db.users.models import UserAccountModel, UserModel
 
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import NoResultFound
 
 
 async def _create_new_user(body: UserDataBase, db) -> UserDataExtend:
@@ -54,5 +55,15 @@ async def _update_user_account_balance(
     await user_admin_dal.update_balance(
         user_account_id=account.account_id, money=balance.balance
     )
-
     return account
+
+
+@handle_dal_errors
+async def _block_user(telegram_id: str, is_active: bool, db: AsyncSession):
+    try:
+        user = await _get_user(telegram_id=telegram_id, db=db)
+    except NoResultFound:
+        raise HTTPException(status_code=404, detail="Item not found")
+    obj_dal = UsersDAL(db, UserModel)
+    await obj_dal.update(id=user.uuid, is_active=is_active)
+    return user

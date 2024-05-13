@@ -50,3 +50,8 @@ async def verify_user_data(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid or missing token",
             )
+        if user.is_active == False:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Blocked",
+            )
