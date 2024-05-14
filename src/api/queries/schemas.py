@@ -14,8 +14,8 @@ class UserQueryBase(BaseModel):
 
     @field_validator("query")
     def validate_query(cls, value):
-        if len(value) > 1000:
-            raise ValueError("Query must be lesser 1000 letters")
+        if len(value) > 50000:
+            raise ValueError("Query must be lesser 50000 letters")
         return value
 
 
