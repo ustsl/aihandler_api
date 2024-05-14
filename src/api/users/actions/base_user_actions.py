@@ -50,12 +50,15 @@ async def _get_user_account(telegram_id: str, db: AsyncSession) -> AccountData:
 async def _update_user_account_balance(
     telegram_id: str, balance: UserBalance, db: AsyncSession
 ) -> UserDataExtend:
-    account = await _get_user_account(telegram_id=telegram_id, db=db)
-    user_admin_dal = AdminUserAccountDal(db, UserAccountModel)
-    await user_admin_dal.update_balance(
-        user_account_id=account.account_id, money=balance.balance
-    )
-    return account
+    async with db as session:
+        async with session.begin():
+            account = await _get_user_account(telegram_id=telegram_id, db=session)
+            user_admin_dal = AdminUserAccountDal(session, UserAccountModel)
+            await user_admin_dal.update_balance(
+                user_account_id=account.account_id,
+                money=balance.balance + account.balance,
+            )
+            return account
 
 
 @handle_dal_errors
