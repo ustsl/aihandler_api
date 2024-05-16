@@ -51,8 +51,8 @@ class MoneyTransactionRecipientDAL:
         prompt_account = prompt_account.scalars().first()
         if prompt_account is None:
             return {"error": "Prompt account not found", "status": 404}
-        # Add +15% balance
-        additional_amount = money * 0.15
+        # Add +10% balance
+        additional_amount = money * 0.10
         new_prompt_balance = float(prompt_account.balance) + additional_amount
         await self.db_session.execute(
             update(self.model)
