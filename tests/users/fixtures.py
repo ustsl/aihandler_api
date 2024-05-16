@@ -24,7 +24,7 @@ def user_data_with_prompt():
 
     client.put(
         "v1/users/12345/balance",
-        json={"balance": 0},
+        json={"balance": -1},
         headers=HEADERS,
     )
 
@@ -41,13 +41,6 @@ def user_data_with_money():
     )
 
     assert user_data_create.status_code == 200, "Failed to create user"
-
-    user_data_change_balance = client.put(
-        "v1/users/4589/balance",
-        json={"balance": 1000},
-        headers=HEADERS,
-    )
-    assert user_data_change_balance.status_code == 200, "Failed to change balance"
 
     user_data_response = client.get(
         f"v1/users/4589",
