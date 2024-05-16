@@ -7,9 +7,9 @@ from src.settings import OPENAI_TOKEN
 model_price = {
     "gpt-3.5-turbo": 0.03,
     "gpt-3.5-turbo-0125": 0.03,
-    "gpt-4-turbo": 0.07,
-    "gpt-4-turbo-2024-04-09": 0.07,
-    "gpt-4o": 0.07,
+    "gpt-4-turbo": 0.08,
+    "gpt-4-turbo-2024-04-09": 0.08,
+    "gpt-4o": 0.08,
 }
 
 
