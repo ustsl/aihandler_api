@@ -49,6 +49,7 @@ async def _show_prompts(
         search_query=search_query,
         only_yours=only_yours,
     )
+    print(results)
     return results
 
 
