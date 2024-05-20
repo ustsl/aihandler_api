@@ -16,7 +16,7 @@ class MoneyTransactionUserDal:
         # Check sender
         self._user_account_id = user_account_id
         user_account = await self.db_session.execute(
-            select(self.model).where(self.model.account_id == user_account_id)
+            select(self.model).where(self.model.uuid == user_account_id)
         )
         self._user_account = user_account.scalars().first()
         if self._user_account is None:
@@ -32,7 +32,7 @@ class MoneyTransactionUserDal:
         new_user_balance = float(self._user_account.balance) - money
         await self.db_session.execute(
             update(self.model)
-            .where(self.model.account_id == self._user_account_id)
+            .where(self.model.uuid == self._user_account_id)
             .values(balance=new_user_balance)
         )
         return {"result": True}
@@ -46,7 +46,7 @@ class MoneyTransactionRecipientDAL:
     async def send(self, prompt_account_id: uuid.UUID, money: Decimal):
         # Check recipient
         prompt_account = await self.db_session.execute(
-            select(self.model).where(self.model.account_id == prompt_account_id)
+            select(self.model).where(self.model.uuid == prompt_account_id)
         )
         prompt_account = prompt_account.scalars().first()
         if prompt_account is None:
@@ -56,7 +56,7 @@ class MoneyTransactionRecipientDAL:
         new_prompt_balance = float(prompt_account.balance) + additional_amount
         await self.db_session.execute(
             update(self.model)
-            .where(self.model.account_id == prompt_account_id)
+            .where(self.model.uuid == prompt_account_id)
             .values(balance=new_prompt_balance)
         )
         return {"status": 201}

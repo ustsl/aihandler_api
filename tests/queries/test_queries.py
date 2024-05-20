@@ -6,7 +6,6 @@ from tests.users.fixtures import *
 def test_gpt_query(user_data_with_money, prompt_data):
 
     user_data = user_data_with_money
-    print(user_data)
 
     headers = {"Authorization": user_data.get("token").get("token")}
     query = f"v1/queries/{user_data.get("telegram_id")}"

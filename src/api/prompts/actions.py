@@ -2,6 +2,7 @@ from uuid import UUID
 from typing import List
 from fastapi import HTTPException, status
 
+from src.api.users.actions.account_user_actions import _get_user_account
 from src.api.utils import handle_dal_errors
 
 from src.api.prompts.schemas import (
@@ -10,7 +11,7 @@ from src.api.prompts.schemas import (
     GPTPromptList,
     GPTPromptShow,
 )
-from src.api.users.actions.base_user_actions import _get_user_account
+
 from src.db.prompts.dals import PromptDAL
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -25,7 +26,7 @@ async def _create_new_prompt(
         async with session.begin():
             account = await _get_user_account(telegram_id=telegram_id, db=db)
             data_to_create = body.model_dump()
-            data_to_create["account_id"] = account.account_id
+            data_to_create["account_id"] = account.uuid
             obj_dal = PromptDAL(session, PromptModel)
             result = await obj_dal.create(**data_to_create)
             if isinstance(result, dict) and result.get("error"):
@@ -44,12 +45,12 @@ async def _show_prompts(
     account = await _get_user_account(telegram_id=telegram_id, db=db)
     obj_dal = PromptDAL(db, PromptModel)
     results = await obj_dal.list(
-        account_id=account.account_id,
+        account_id=account.uuid,
         offset=offset,
         search_query=search_query,
         only_yours=only_yours,
     )
-    print(results)
+
     return results
 
 
@@ -95,15 +96,14 @@ async def _update_prompt(
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Not found"
             )
-        if account.account_id == prompt.account_id:
+        if account.uuid == prompt.account_id:
             #### ACTION
             result = await obj_dal.update(prompt_id, **updates)
             return result
-
     except Exception as e:
         return {"status": 500, "error": str(e)}
 
-    return {"status": 422}
+    return {"status": 422, "error": "Unknown"}
 
 
 @handle_dal_errors
@@ -117,7 +117,7 @@ async def _delete_prompt(prompt_id: UUID, telegram_id, db: AsyncSession) -> dict
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Not found"
             )
-        if account.account_id == prompt.account_id:
+        if account.uuid == prompt.account_id:
 
             #### ACTION
             result = await obj_dal.delete(prompt_id)

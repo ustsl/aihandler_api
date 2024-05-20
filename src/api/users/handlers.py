@@ -2,19 +2,21 @@ import uuid
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.api.users.actions.account_user_actions import _update_user_account_balance
 from src.api.users.actions.base_user_actions import (
     _block_user,
     _create_new_user,
     _get_user,
     _get_users,
-    _update_user_account_balance,
 )
 
 from src.api.users.actions.settings_actions import _update_user_settings_prompt
+from src.api.users.actions.token_actions import _update_user_token
 from src.api.utils import verify_token
 from src.db.session import get_db
 
 from src.api.users.schemas import (
+    TokenData,
     UserBalance,
     UserDataBase,
     UserDataExtend,
@@ -65,4 +67,10 @@ async def set_block_user(
     res = await _block_user(
         telegram_id=telegram_id, is_active=updates.get("is_active"), db=db
     )
+    return res
+
+
+@user_router.put("/{telegram_id}/token", response_model=TokenData)
+async def update_token(telegram_id: str, db: AsyncSession = Depends(get_db)):
+    res = await _update_user_token(telegram_id=telegram_id, db=db)
     return res

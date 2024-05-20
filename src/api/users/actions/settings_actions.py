@@ -1,10 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.prompts.actions import _show_prompt
 from src.api.users.actions.base_user_actions import _get_user
-from src.api.users.schemas import UserDataExtend
 from src.api.utils import handle_dal_errors
 
-from src.db.users.dals.settings_dal import UserSettingsDal
+from src.db.users.dals.settings import UserSettingsDal
 from src.db.users.models import UserSettingsModel
 
 
@@ -17,5 +16,5 @@ async def _update_user_settings_prompt(
         user = await _get_user(telegram_id=telegram_id, db=db)
         if user:
             obj_dal = UserSettingsDal(db, UserSettingsModel)
-            result = await obj_dal.update(id=user.settings.uuid, prompt_id=prompt_id)
+            result = await obj_dal.update(uuid=user.settings.uuid, prompt_id=prompt_id)
             return result

@@ -14,7 +14,7 @@ def prompt_data(user_data_with_prompt):
 
     user_data = user_data_with_prompt
 
-    account_id = user_data.get("accounts").get("account_id")
+    account_id = user_data.get("accounts").get("uuid")
     telegram_id = user_data.get("telegram_id")
     token = user_data.get("token").get("token")
     headers = {"Authorization": token}

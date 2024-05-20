@@ -5,7 +5,7 @@ from sqlalchemy import select, update
 from sqlalchemy.ext.declarative import DeclarativeMeta
 
 
-class AdminUserAccountDal:
+class UserAccountDal:
     def __init__(self, db_session: AsyncSession, model: DeclarativeMeta):
         self.db_session = db_session
         self.model = model
@@ -14,7 +14,7 @@ class AdminUserAccountDal:
 
         await self.db_session.execute(
             update(self.model)
-            .where(self.model.account_id == user_account_id)
+            .where(self.model.uuid == user_account_id)
             .values(balance=float(money))
         )
 

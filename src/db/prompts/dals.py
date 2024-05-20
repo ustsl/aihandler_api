@@ -57,7 +57,7 @@ class PromptDAL(BaseDAL):
                 conditions.append(self.model.account_id == account_id)
             else:
                 conditions.append(
-                    or_(self.model.is_open == True, self.model.account_id == account_id)
+                    or_(self.model.is_open == True, self.model.uuid == account_id)
                 )
 
             query = (

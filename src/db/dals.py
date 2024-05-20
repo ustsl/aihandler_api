@@ -63,11 +63,11 @@ class BaseDAL:
             await self.db_session.rollback()
             return {"error": f"Error retrieving prompt: {str(e)}", "status": 500}
 
-    async def update(self, id: uuid.UUID, **kwargs):
+    async def update(self, uuid: uuid.UUID, **kwargs):
         try:
             query = (
                 update(self.model)
-                .where(self.model.uuid == id)
+                .where(self.model.uuid == uuid)
                 .values(**kwargs)
                 .execution_options(synchronize_session="fetch")
             )

@@ -19,7 +19,7 @@ class UserModel(MaintenanceModel):
 
 class UserTokenModel(TimeModel):
     __tablename__ = "tokens"
-    token_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(
         UUID(as_uuid=True), ForeignKey("users.uuid", ondelete="CASCADE"), unique=True
     )
@@ -31,7 +31,7 @@ class UserTokenModel(TimeModel):
 
 class UserAccountModel(TimeModel):
     __tablename__ = "accounts"
-    account_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.uuid"), nullable=False)
     balance = Column(Numeric(11, 5), nullable=False, default=1)
 

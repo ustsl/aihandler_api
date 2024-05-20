@@ -36,11 +36,12 @@ class GPTPromptBase(BaseModel):
             )
         return value
 
-    # @field_validator("context_story_window")
-    # def validate_context_story_window(cls, value):
-    #     if type(value) != int or value < 0 or value > 30:
-    #         raise ValueError("context_story_window must be lesser 30 and more 0")
-    #     return value
+    @field_validator("context_story_window")
+    def validate_context_story_window(cls, value):
+        if value:
+            if value < 0 or value > 50:
+                raise ValueError("context_story_window must be lesser 50 and more 0")
+        return value
 
 
 class GPTPromptCreate(BaseModel):

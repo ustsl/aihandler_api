@@ -5,7 +5,7 @@ from fastapi import Request, HTTPException, status, Depends
 
 from src.settings import SERVICE_TOKEN
 
-from src.db.users.dals.base import UsersDAL
+from src.db.users.dals.user import UsersDAL
 from src.db.users.models import UserModel
 
 from src.db.session import get_db

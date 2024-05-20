@@ -25,5 +25,5 @@ class UserQueryResult(BaseModel):
 
 
 class UserQueryStore(UserQueryBase):
-    user_id: UUID
+    uuid: UUID
     result: str

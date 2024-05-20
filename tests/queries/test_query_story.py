@@ -1,5 +1,3 @@
-from tests.conftest import client
-
 from tests.prompts.fixtures import *
 from tests.conftest import client
 

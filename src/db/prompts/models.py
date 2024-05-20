@@ -21,9 +21,7 @@ class PromptModel(MaintenanceModel, TimeModel):
     model = Column(String, default="gpt-3.5-turbo", nullable=False)
     is_open = Column(Boolean(), default=True, nullable=True)
     context_story_window = Column(Integer, default=0, nullable=True)
-    account_id = Column(
-        UUID(as_uuid=True), ForeignKey("accounts.account_id"), nullable=False
-    )
+    account_id = Column(UUID(as_uuid=True), ForeignKey("accounts.uuid"), nullable=False)
 
     price_usage = Column(Numeric(10, 2), nullable=False, default=0.00)
 

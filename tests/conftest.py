@@ -43,7 +43,6 @@ app.dependency_overrides[get_db] = override_get_async_session
 async def prepare_database():
     async with engine_test.begin() as conn:
         await conn.run_sync(metadata.create_all)
-        print(f"Created tables: {list(metadata.tables.keys())}")
     yield
     async with engine_test.begin() as conn:
         await conn.run_sync(metadata.drop_all)

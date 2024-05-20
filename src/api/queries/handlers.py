@@ -36,11 +36,8 @@ async def create_query(
 
 @query_router.get("/", dependencies=[Depends(verify_token)])
 async def get_queries(
-    telegram_id: str = None,
     offset: int = 0,
     db: AsyncSession = Depends(get_db),
 ):
-
     res = await _show_queries(offset=offset, db=db)
-
     return res

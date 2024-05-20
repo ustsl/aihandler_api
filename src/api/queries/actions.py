@@ -55,7 +55,7 @@ async def _create_query(
 
             if prompt:
                 user_obj_dal = MoneyTransactionUserDal(session, UserAccountModel)
-                check = await user_obj_dal.check_balance(user.accounts.account_id)
+                check = await user_obj_dal.check_balance(user.accounts.uuid)
                 if check.get("result"):
 
                     gpt = CreateGPTResponse(

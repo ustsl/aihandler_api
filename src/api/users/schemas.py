@@ -26,22 +26,26 @@ class SettingsData(BaseModel):
 
 
 class TokenData(BaseModel):
-    token_id: UUID
+    uuid: UUID
     token: str
 
 
 class AccountData(BaseModel):
-    account_id: UUID
+    uuid: UUID
     balance: Decimal
 
 
-class UserDataExtend(UserDataWithId):
-
-    token: TokenData
-    accounts: AccountData
-    settings: SettingsData
-    is_active: bool
+class TokenData(BaseModel):
+    uuid: UUID
+    token: UUID
 
 
 class UserBalance(BaseModel):
     balance: Decimal
+
+
+class UserDataExtend(UserDataWithId):
+    token: TokenData
+    accounts: AccountData
+    settings: SettingsData
+    is_active: bool
