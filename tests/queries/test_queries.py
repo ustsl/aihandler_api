@@ -41,8 +41,8 @@ def test_gpt_query(user_data_with_money, prompt_data):
     )
     balance = response.json().get("accounts").get("balance")
     balance = float(balance)
-    assert balance > 0.99
-    assert balance < 1000
+    assert balance > 0.49
+    assert balance < 0.5
 
 
 def test_gpt_query_no_balance(prompt_data, user_data_with_prompt):
