@@ -33,7 +33,7 @@ class UserAccountModel(TimeModel):
     __tablename__ = "accounts"
     uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.uuid"), nullable=False)
-    balance = Column(Numeric(11, 5), nullable=False, default=1)
+    balance = Column(Numeric(11, 5), nullable=False, default=0.5)
 
     # back relations
     user = relationship("UserModel", back_populates="accounts", uselist=False)
