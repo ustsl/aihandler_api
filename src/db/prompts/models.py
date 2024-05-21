@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, ForeignKey, Numeric, String, Boolean, Integer
+from sqlalchemy import Column, ForeignKey, String, Boolean, Integer, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -22,8 +22,7 @@ class PromptModel(MaintenanceModel, TimeModel):
     is_open = Column(Boolean(), default=True, nullable=True)
     context_story_window = Column(Integer, default=0, nullable=True)
     account_id = Column(UUID(as_uuid=True), ForeignKey("accounts.uuid"), nullable=False)
-
-    price_usage = Column(Numeric(10, 2), nullable=False, default=0.00)
+    tuning = Column(JSON, nullable=True)
 
     # Отношение, указывающее на аккаунт, к которому привязан промпт
     account = relationship("UserAccountModel", back_populates="prompts")

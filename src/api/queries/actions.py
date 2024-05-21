@@ -14,7 +14,8 @@ from src.db.users.models import UserAccountModel
 from src.db.queries.dals import QueryDAL
 
 
-from src.modules.gpt_core import CreateGPTResponse
+from src.modules.gpt.handler import gpt_handler
+
 
 from uuid import UUID
 
@@ -55,21 +56,21 @@ async def _create_query(
 
             if prompt:
                 user_obj_dal = MoneyTransactionUserDal(session, UserAccountModel)
-                check = await user_obj_dal.check_balance(user.accounts.uuid)
-                if check.get("result"):
+                check_balance = await user_obj_dal.check_balance(user.accounts.uuid)
+                if check_balance.get("result"):
 
-                    gpt = CreateGPTResponse(
-                        prompt=prompt.prompt,
-                        message=query,
-                        story=story_crop,
-                        model=prompt.model,
-                    )
+                    params = {
+                        "prompt": prompt.prompt,
+                        "message": query,
+                        "story": story_crop,
+                        "model": prompt.model,
+                    }
 
-                    await gpt.generate()
-                    gpt_res = gpt.get_result()
-                    cost = gpt_res.get("cost")
+                    result = await gpt_handler(params)
+
+                    cost = result.get("cost")
+
                     if cost:
-
                         decrease_proccess = await _transfer_balance(
                             user_obj_dal=user_obj_dal,
                             account_id=prompt.account_id,
@@ -83,10 +84,10 @@ async def _create_query(
                                 user_id=user.uuid,
                                 prompt_id=prompt_id,
                                 query=query,
-                                result=gpt_res.get("result"),
+                                result=result.get("result"),
                                 db=session,
                             )
-                            return gpt_res
+                            return result
                 else:
                     return {"error": "wallet it empty", "status": 403}
                 return {"result": "fail", "error": 500}

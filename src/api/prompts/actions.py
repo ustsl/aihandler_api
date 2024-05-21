@@ -72,7 +72,6 @@ async def _show_prompt(
             description=prompt.description,
             model=prompt.model,
             account_id=str(prompt.account_id),
-            price_usage=float(prompt.price_usage),
             is_deleted=prompt.is_deleted,
             prompt=prompt.prompt,
             is_open=prompt.is_open,
