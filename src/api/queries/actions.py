@@ -68,6 +68,9 @@ async def _create_query(
                     }
 
                     result = await gpt_handler(params)
+                    if result.get("error"):
+                        result["status"] = 500
+                        return result
 
                     cost = result.get("cost")
 

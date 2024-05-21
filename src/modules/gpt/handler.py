@@ -8,10 +8,15 @@ from src.modules.gpt.modules.response_model import (
 
 
 async def factory(response_model: str, params: dict) -> dict:
-    query = response_model(params)
-    await query.generate()
-    query.calc()
-    return query.get_result()
+    try:
+        query = response_model(params)
+        await query.generate()
+        query.calc()
+        return query.get_result()
+    except Exception as e:
+        return {
+            "error": str(e),
+        }
 
 
 async def gpt_handler(params):

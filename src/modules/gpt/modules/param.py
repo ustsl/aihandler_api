@@ -4,10 +4,10 @@ model_price = {
     "gpt-4-turbo": 0.08,
     "gpt-4-turbo-2024-04-09": 0.08,
     "gpt-4o": 0.08,
-    # SYMBOL & - is splitter for image models
     "dall-e-3": 0.15,
 }
 
+# additional keys with price modificators
 
 dalee_style = {"natural": 0, "vivid": 0}
 

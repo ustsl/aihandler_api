@@ -3,6 +3,7 @@ import httpx
 from src.modules.gpt.modules.calc import GptImageCalculator, GptTokenCalculator
 from src.modules.gpt.modules.exception_wrapper import handle_exceptions
 from src.modules.gpt.modules.interface import AIQueryInterface
+from src.modules.gpt.modules.schemas import TuningModel
 from src.settings import OPENAI_TOKEN
 
 
@@ -59,9 +60,12 @@ class CreateDaleeResponse(AIQueryInterface):
         self._message = params.get("message")
 
         tuning = params.get("tuning", {})
-        self._style = tuning.get("style")
-        self._size = tuning.get("size")
-        self._quality = tuning.get("quality")
+
+        validated_tuning = TuningModel(**tuning)
+
+        self._style = validated_tuning.style
+        self._size = validated_tuning.size
+        self._quality = validated_tuning.quality
 
         self._result = None
 
