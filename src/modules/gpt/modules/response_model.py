@@ -57,9 +57,11 @@ class CreateDaleeResponse(AIQueryInterface):
             raise ValueError("OpenAI API key must be defined.")
         self._prompt = params.get("prompt")
         self._message = params.get("message")
-        self._style = params.get("style")
-        self._size = params.get("size")
-        self._quality = params.get("quality")
+
+        tuning = params.get("tuning", {})
+        self._style = tuning.get("style")
+        self._size = tuning.get("size")
+        self._quality = tuning.get("quality")
 
         self._result = None
 
@@ -81,8 +83,6 @@ class CreateDaleeResponse(AIQueryInterface):
             json_data["size"] = self._size
         if self._style:
             json_data["style"] = self._style
-
-        print(json_data)
 
         async with httpx.AsyncClient(timeout=300) as client:
             response = await client.post(

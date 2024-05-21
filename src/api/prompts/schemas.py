@@ -19,6 +19,7 @@ class GPTPromptBase(BaseModel):
     model: str
     is_open: bool
     context_story_window: Optional[Union[int, None]]
+    tuning: Optional[Union[dict, None]]
 
     @field_validator("model")
     def validate_model(cls, value):

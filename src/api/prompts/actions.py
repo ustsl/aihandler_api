@@ -80,6 +80,7 @@ async def _show_prompt(
             time_create=prompt.time_create.isoformat(),
             time_update=prompt.time_update.isoformat(),
             telegram_id=prompt.account.user.telegram_id,
+            tuning=prompt.tuning,
         )
 
 

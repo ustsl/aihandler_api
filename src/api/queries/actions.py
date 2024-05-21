@@ -64,6 +64,7 @@ async def _create_query(
                         "message": query,
                         "story": story_crop,
                         "model": prompt.model,
+                        "tuning": prompt.tuning,
                     }
 
                     result = await gpt_handler(params)
