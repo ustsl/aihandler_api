@@ -15,7 +15,7 @@ from sqlalchemy.exc import NoResultFound
 
 
 @handle_dal_errors
-async def _get_user(telegram_id: str, db: AsyncSession) -> UserDataExtend:
+async def _get_user(telegram_id: str, db: AsyncSession):
     obj_dal = UsersDAL(db, UserModel)
     result = await obj_dal.get(telegram_id)
     return result

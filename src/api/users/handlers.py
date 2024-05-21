@@ -35,7 +35,7 @@ async def get_users(db: AsyncSession = Depends(get_db)):
     return await _get_users(db)
 
 
-@user_router.get("/{telegram_id}", response_model=UserDataExtend)
+@user_router.get("/{telegram_id}")
 async def get_user(telegram_id: str, db: AsyncSession = Depends(get_db)):
     res = await _get_user(telegram_id, db)
     return res

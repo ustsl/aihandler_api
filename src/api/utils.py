@@ -1,16 +1,15 @@
-from fastapi import HTTPException
+from src.settings import SERVICE_TOKEN
+
 from functools import wraps
 
-from fastapi import Request, HTTPException, status, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.settings import SERVICE_TOKEN
+from fastapi import Request, HTTPException, status, Depends
+from fastapi import HTTPException
 
 from src.db.users.dals.user import UsersDAL
 from src.db.users.models import UserModel
-
 from src.db.session import get_db
-
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 def handle_dal_errors(func):
@@ -19,7 +18,7 @@ def handle_dal_errors(func):
         result = await func(*args, **kwargs)
         if isinstance(result, dict) and "error" in result:
             status = result.get("status", 500)
-            raise HTTPException(status_code=status, detail=result["error"])
+            raise HTTPException(status_code=status, detail=result.get("error"))
         return result
 
     return wrapper

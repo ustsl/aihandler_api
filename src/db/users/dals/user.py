@@ -5,17 +5,19 @@ from src.db.dals import BaseDAL
 ###########################################################
 
 from sqlalchemy import select
-from sqlalchemy.exc import NoResultFound
+
 
 import uuid
 from decimal import Decimal
 from sqlalchemy.orm import joinedload
 
 from src.db.users.models import UserAccountModel, UserTokenModel, UserSettingsModel
+from src.db.utils import exception_dal
 
 
 class UsersDAL(BaseDAL):
 
+    @exception_dal
     async def create(self, **data):
         try:
             obj = self.model(**data)
@@ -42,6 +44,7 @@ class UsersDAL(BaseDAL):
             )
             return {"error": error_msg}
 
+    @exception_dal
     async def get(self, telegram_id: str):
         query = (
             select(self.model)
