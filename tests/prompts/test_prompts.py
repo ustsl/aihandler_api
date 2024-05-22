@@ -74,6 +74,7 @@ async def test_create_prompt_to_blocked_user(user_data_with_block):
             "account_id": account_id,
             "is_open": True,
             "context_story_window": 5,
+            "tuning": {}
         },
         headers=headers,
     )

@@ -29,6 +29,7 @@ def prompt_data(user_data_with_prompt):
             "account_id": account_id,
             "is_open": True,
             "context_story_window": 5,
+            "tuning": {},
         },
         headers=headers,
     )

@@ -23,6 +23,7 @@ class GptTokenCalculator:
 
 class GptImageCalculator:
     def __init__(self, quality, size):
+        print(quality, size)
         self._model = "dall-e-3"
         self._quality = quality
         self._size = size
