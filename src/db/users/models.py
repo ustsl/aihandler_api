@@ -2,6 +2,7 @@ from sqlalchemy import Column, Numeric, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from src.db.models import TimeModel, MaintenanceModel, Base
+from src.db.users.mixins import UserRelationMixin
 import uuid
 
 
@@ -17,35 +18,33 @@ class UserModel(MaintenanceModel):
     settings = relationship("UserSettingsModel", back_populates="user", uselist=False)
 
 
-class UserTokenModel(TimeModel):
+class UserTokenModel(TimeModel, UserRelationMixin):
     __tablename__ = "tokens"
+    _user_back_populates = "token"
+    _user_uselist = False
+    _user_id_is_inique = True
+
     uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(
-        UUID(as_uuid=True), ForeignKey("users.uuid", ondelete="CASCADE"), unique=True
-    )
     token = Column(String, nullable=False)
-    user = relationship(
-        "UserModel", back_populates="token", uselist=False, cascade="all"
-    )
 
 
-class UserAccountModel(TimeModel):
+class UserAccountModel(TimeModel, UserRelationMixin):
     __tablename__ = "accounts"
+    _user_back_populates = "accounts"
+
     uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.uuid"), nullable=False)
     balance = Column(Numeric(11, 5), nullable=False, default=0.5)
 
     # back relations
-    user = relationship("UserModel", back_populates="accounts", uselist=False)
     prompts = relationship("PromptModel", back_populates="account", uselist=True)
 
 
-class UserSettingsModel(Base):
+class UserSettingsModel(Base, UserRelationMixin):
     __tablename__ = "user_settings"
+    _user_back_populates = "settings"
+
     uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.uuid"), nullable=False)
     prompt_id = Column(UUID(as_uuid=True), ForeignKey("prompts.uuid"), nullable=True)
 
     # back relations
-    user = relationship("UserModel", back_populates="settings", uselist=False)
     prompt = relationship("PromptModel", back_populates="settings", uselist=False)
