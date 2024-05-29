@@ -20,9 +20,13 @@ class UserDataWithId(UserDataBase, UserDataId):
     pass
 
 
-class SettingsData(BaseModel):
-    uuid: UUID
+class SettingsGetData(BaseModel):
     prompt_id: Optional[UUID] = None
+    language: Optional[str] = None
+
+
+class SettingsData(SettingsGetData):
+    uuid: UUID
 
 
 class TokenData(BaseModel):

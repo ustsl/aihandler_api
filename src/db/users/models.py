@@ -45,6 +45,7 @@ class UserSettingsModel(Base, UserRelationMixin):
 
     uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     prompt_id = Column(UUID(as_uuid=True), ForeignKey("prompts.uuid"), nullable=True)
+    language = Column(String(2), nullable=True)
 
     # back relations
     prompt = relationship("PromptModel", back_populates="settings", uselist=False)

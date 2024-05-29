@@ -10,7 +10,9 @@ from src.api.users.actions.base_user_actions import (
     _get_users,
 )
 
-from src.api.users.actions.settings_actions import _update_user_settings_prompt
+from src.api.users.schemas import SettingsGetData
+
+from src.api.users.actions.settings_actions import _update_user_settings
 from src.api.users.actions.token_actions import _update_user_token
 from src.api.utils import verify_token
 from src.db.session import get_db
@@ -49,14 +51,13 @@ async def set_user_balance(
     return res
 
 
-@user_router.put("/{telegram_id}/prompt")
-async def set_user_prompt(
-    telegram_id: str, updates: dict, db: AsyncSession = Depends(get_db)
+@user_router.put("/{telegram_id}/prompt")  # is deprecated
+@user_router.put("/{telegram_id}/settings")
+async def set_user_settings(
+    telegram_id: str, updates: SettingsGetData, db: AsyncSession = Depends(get_db)
 ):
     # This function may changes user preset prompt, its need for telegram part of app
-    res = await _update_user_settings_prompt(
-        telegram_id=telegram_id, prompt_id=updates.get("prompt_id"), db=db
-    )
+    res = await _update_user_settings(telegram_id=telegram_id, updates=updates, db=db)
     return res
 
 
