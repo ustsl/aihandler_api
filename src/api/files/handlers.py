@@ -1,8 +1,9 @@
 import base64
 from pathlib import Path
-
+import os
+import aiofiles
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 import httpx
 
 from src.api.utils import verify_user_data
@@ -14,44 +15,57 @@ from src.settings import OPENAI_TOKEN
 files_router = APIRouter(dependencies=[Depends(verify_user_data)])
 
 
+OPENAI_API_KEY = OPENAI_TOKEN
+OPENAI_API_URL = "https://api.openai.com/v1/chat/completions"
+PROMPT = "опиши что ты видишь на картинке"
+
+
+async def send_image_to_openai(image_path: str, prompt: str):
+    headers = {"Authorization": f"Bearer {OPENAI_API_KEY}"}
+
+    payload = {
+        "model": "gpt-4o",
+        "messages": [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": PROMPT},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                        },
+                    },
+                ],
+            }
+        ],
+    }
+
+    async with httpx.AsyncClient(timeout=300) as client:
+        response = await client.post(OPENAI_API_URL, headers=headers, json=payload)
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            raise HTTPException(status_code=exc.response.status_code, detail=str(exc))
+
+        return response.json()
+
+
 @files_router.post("/image/{telegram_id}")
 async def image_download(telegram_id: str, file: UploadFile = File(...)):
 
     save_path = PathWorker.generate_path(
-        user_id=str(telegram_id), folder="mp3", file=file
+        user_id=str(telegram_id), folder="images", file=file
     )
-    await file_save(save_path=save_path, file=file)
+    await file_save(file=file, save_path=save_path)
+
+    # result = await send_image_to_openai(save_path, PROMPT)
+    # print(result)
+
     check_path = PathWorker.check_path(save_path=save_path)
+
     # if check_path:
     #     PathWorker.delete_path(save_path=save_path)
-
-    headers = {
-        "Authorization": f"Bearer {OPENAI_TOKEN}",
-        "Content-Type": "application/json",
-    }
-
-    # Прочитаем содержимое файла и закодируем его в base64
-    with open(save_path, "rb") as image_file:
-        image_content = base64.b64encode(image_file.read()).decode("utf-8")
-
-    # Подготовим данные для запроса
-    data = {
-        "image": image_content,  # Отправляем закодированное содержимое файла
-        "prompt": "переделай персонажей на картинке в мультяшный вид",
-        "num_images": 1,
-        "model": "dall-e-3",
-    }
-
-    async with httpx.AsyncClient(timeout=300) as client:
-        response = await client.post(
-            "https://api.openai.com/v1/images/generations",
-            headers=headers,
-            json=data,  # Отправляем данные в формате JSON
-        )
-        response.raise_for_status()
-        completion = response.json()
-        result = completion["data"][0]["url"]
-        print(result)
 
     return {"filename": save_path.name, "path": str(save_path)}
 
