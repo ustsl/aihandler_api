@@ -58,10 +58,12 @@ class BaseDAL:
     @exception_dal
     async def update(self, uuid: uuid.UUID, **kwargs):
         try:
+            update_values = {k: v for k, v in kwargs.items() if v is not None}
+
             query = (
                 update(self.model)
                 .where(self.model.uuid == uuid)
-                .values(**kwargs)
+                .values(**update_values)
                 .execution_options(synchronize_session="fetch")
             )
             await self.db_session.execute(query)
