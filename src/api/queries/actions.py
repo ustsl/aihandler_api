@@ -43,7 +43,12 @@ async def _transfer_balance(user_obj_dal, account_id, cost, session):
 
 @handle_dal_errors
 async def _create_query(
-    prompt_id: str, telegram_id: str, query: str, story: list, db: AsyncSession
+    prompt_id: str,
+    telegram_id: str,
+    query: str,
+    story: list,
+    vision: bool,
+    db: AsyncSession,
 ):
     async with db as session:
         async with session.begin():
@@ -58,13 +63,13 @@ async def _create_query(
                 user_obj_dal = MoneyTransactionUserDal(session, UserAccountModel)
                 check_balance = await user_obj_dal.check_balance(user.accounts.uuid)
                 if check_balance.get("result"):
-
                     params = {
                         "prompt": prompt.prompt,
                         "message": query,
                         "story": story_crop,
                         "model": prompt.model,
                         "tuning": prompt.tuning,
+                        "vision": vision,
                     }
 
                     result = await gpt_handler(params)

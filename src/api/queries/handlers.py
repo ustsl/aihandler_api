@@ -23,11 +23,16 @@ async def create_query(
     db: AsyncSession = Depends(get_db),
 ) -> UserQueryResult:
 
+    vision = False
+    if body.vision:
+        vision = body.vision
+
     res = await _create_query(
         prompt_id=body.prompt_id,
         telegram_id=telegram_id,
         query=body.query,
         story=body.story,
+        vision=vision,
         db=db,
     )
 

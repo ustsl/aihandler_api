@@ -10,6 +10,7 @@ from typing import Optional, List
 class UserQueryBase(BaseModel):
     prompt_id: UUID
     query: str
+    vision: bool = None
     story: Optional[List[dict]] = None
 
     @field_validator("query")

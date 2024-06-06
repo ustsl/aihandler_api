@@ -4,8 +4,16 @@ from functools import wraps
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import File, Request, HTTPException, UploadFile, status, Depends
-from fastapi import HTTPException
+from fastapi import (
+    File,
+    Request,
+    HTTPException,
+    UploadFile,
+    status,
+    Depends,
+    HTTPException,
+)
+
 
 from src.db.users.dals.user import UsersDAL
 from src.db.users.models import UserModel
