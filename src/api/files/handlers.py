@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 import httpx
 
-from src.api.utils import verify_user_data
+from src.api.utils import verify_file_size, verify_user_data
 from src.modules.file_saver.handler import file_save
 from src.modules.path_worker.handler import PathWorker
 from src.settings import OPENAI_TOKEN
@@ -52,7 +52,9 @@ async def send_image_to_openai(image_path: str, prompt: str):
 
 
 @files_router.post("/image/{telegram_id}")
-async def image_download(telegram_id: str, file: UploadFile = File(...)):
+async def image_download(
+    telegram_id: str, file: UploadFile = Depends(verify_file_size)
+):
 
     save_path = PathWorker.generate_path(
         user_id=str(telegram_id), folder="images", file=file
