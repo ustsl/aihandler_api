@@ -24,7 +24,7 @@ async def create_query(
 ) -> UserQueryResult:
 
     vision = False
-    if body.vision:
+    if body.vision and body.vision == True:
         vision = body.vision
 
     res = await _create_query(
