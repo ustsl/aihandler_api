@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound
+
 from sqlalchemy import desc, select, update, func
 from sqlalchemy.ext.declarative import DeclarativeMeta
 

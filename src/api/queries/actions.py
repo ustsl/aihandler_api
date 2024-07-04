@@ -57,7 +57,12 @@ async def _create_query(
                 prompt_id=prompt_id, telegram_id=telegram_id, db=db
             )
 
-            story_crop = await story_crop_function(story, prompt.context_story_window)
+            if prompt.context_story_window > 0:
+                story_crop = await story_crop_function(
+                    story, prompt.context_story_window
+                )
+            else:
+                story_crop = []
 
             if prompt:
                 user_obj_dal = MoneyTransactionUserDal(session, UserAccountModel)
