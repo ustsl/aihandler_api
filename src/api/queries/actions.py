@@ -119,3 +119,15 @@ async def _show_queries(
     obj_dal = QueryDAL(db, QueryModel)
     results = await obj_dal.list(offset=offset, order_param="time_create")
     return results
+
+
+@handle_dal_errors
+async def _show_personal_queries(
+    db: AsyncSession,
+    prompt_id: str = None,
+    offset: int = 0,
+):
+
+    obj_dal = QueryDAL(db, QueryModel)
+    results = await obj_dal.personal_list(prompt_id=prompt_id, offset=offset)
+    return results

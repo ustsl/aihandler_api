@@ -35,7 +35,7 @@ class PromptDAL(BaseDAL):
     @exception_dal
     async def list(
         self,
-        page_size: int = 10,
+        page_size: int = 30,
         offset: int = 0,
         account_id: uuid.UUID = None,
         search_query: str = None,

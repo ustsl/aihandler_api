@@ -29,7 +29,7 @@ class BaseDAL:
             return {"error": error_msg}
 
     @exception_dal
-    async def list(self, page_size: int = 10, offset: int = 0, order_param="uuid"):
+    async def list(self, page_size: int = 30, offset: int = 0, order_param="uuid"):
 
         query = (
             select(self.model)
