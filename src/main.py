@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
-from .routes import main_api_router
+from .routes import router
 
 #########################
 # BLOCK WITH API ROUTES #
@@ -18,4 +18,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(main_api_router)
+app.include_router(router)

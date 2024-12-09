@@ -27,7 +27,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 from src.db.prompts.models import PromptModel
-from src.db.prompt_systems.models import PromptSystemModel, PromptSystemPromptModel
+from src.db.scenarios.models import ScenarioPromptsModel, ScenarioModel
 from src.db.users.models import (
     UserModel,
     UserTokenModel,

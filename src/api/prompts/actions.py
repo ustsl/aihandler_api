@@ -1,5 +1,6 @@
+from fastapi import HTTPException
+
 from uuid import UUID
-from typing import List
 from fastapi import HTTPException, status
 
 from src.api.users.actions.account_user_actions import _get_user_account
@@ -61,27 +62,26 @@ async def _show_prompt(
     obj_dal = PromptDAL(db, PromptModel)
     prompt = await obj_dal.get(prompt_id)
 
-    if isinstance(prompt, dict):
-        return prompt
-
-    if prompt.is_open == True or (telegram_id == prompt.account.user.telegram_id):
-
-        return GPTPromptShow(
-            uuid=prompt.uuid,
-            title=prompt.title,
-            description=prompt.description,
-            model=prompt.model,
-            account_id=str(prompt.account_id),
-            is_deleted=prompt.is_deleted,
-            prompt=prompt.prompt,
-            is_open=prompt.is_open,
-            is_active=prompt.is_active,
-            context_story_window=prompt.context_story_window,
-            time_create=prompt.time_create.isoformat(),
-            time_update=prompt.time_update.isoformat(),
-            telegram_id=prompt.account.user.telegram_id,
-            tuning=prompt.tuning,
-        )
+    if prompt:
+        if prompt.is_open == True or (telegram_id == prompt.account.user.telegram_id):
+            return GPTPromptShow(
+                uuid=prompt.uuid,
+                title=prompt.title,
+                description=prompt.description,
+                model=prompt.model,
+                account_id=str(prompt.account_id),
+                is_deleted=prompt.is_deleted,
+                prompt=prompt.prompt,
+                is_open=prompt.is_open,
+                is_active=prompt.is_active,
+                context_story_window=prompt.context_story_window,
+                time_create=prompt.time_create.isoformat(),
+                time_update=prompt.time_update.isoformat(),
+                telegram_id=prompt.account.user.telegram_id,
+                tuning=prompt.tuning,
+            )
+    else:
+        raise HTTPException(status_code=404, detail="Prompt not found")
 
 
 @handle_dal_errors
@@ -92,38 +92,24 @@ async def _update_prompt(
     try:
         account = await _get_user_account(telegram_id=telegram_id, db=db)
         prompt = await obj_dal.get(prompt_id)
-        if not prompt or (isinstance(prompt, dict) and prompt.get("error")):
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Not found"
-            )
-        if account.uuid == prompt.account_id:
-            #### ACTION
-            result = await obj_dal.update(prompt_id, **updates)
-            return result
+        if prompt:
+            if account.uuid == prompt.account_id:
+                result = await obj_dal.update(prompt_id, **updates)
+                return result
     except Exception as e:
-        return {"status": 500, "error": str(e)}
-
-    return {"status": 422, "error": "Unknown"}
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @handle_dal_errors
 async def _delete_prompt(prompt_id: UUID, telegram_id, db: AsyncSession) -> dict:
     obj_dal = PromptDAL(db, PromptModel)
-
     try:
         account = await _get_user_account(telegram_id=telegram_id, db=db)
         prompt = await obj_dal.get(prompt_id)
-        if not prompt or (isinstance(prompt, dict) and prompt.get("error")):
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Not found"
-            )
-        if account.uuid == prompt.account_id:
-
-            #### ACTION
-            result = await obj_dal.delete(prompt_id)
-            return result
-
+        if prompt:
+            if account.uuid == prompt.account_id:
+                result = await obj_dal.delete(prompt_id)
+                return result
+        raise HTTPException(status_code=404, detail="Prompt not found")
     except Exception as e:
-        return {"status": 500, "error": str(e)}
-
-    return {"status": 422}
+        raise HTTPException(status_code=500, detail=str(e))

@@ -6,7 +6,7 @@ from sqlalchemy import desc, func, select
 
 
 from src.db.dals import BaseDAL
-from src.db.prompts.models import PromptModel
+from src.db.scenarios.models import ScenarioModel, ScenarioPromptsModel
 from src.db.users.models import UserAccountModel
 
 from sqlalchemy import or_
@@ -18,19 +18,7 @@ from src.db.utils import exception_dal
 ###########################################################
 
 
-class PromptDAL(BaseDAL):
-
-    async def get(self, prompt_id: uuid.UUID):
-        query = (
-            select(PromptModel)
-            .options(
-                selectinload(PromptModel.account).selectinload(UserAccountModel.user)
-            )
-            .where(PromptModel.uuid == prompt_id, PromptModel.is_deleted == False)
-        )
-        db_query_result = await self.db_session.execute(query)
-        return db_query_result.scalar_one_or_none()
-
+class ScenarioDAL(BaseDAL):
     @exception_dal
     async def list(
         self,
@@ -38,21 +26,15 @@ class PromptDAL(BaseDAL):
         offset: int = 0,
         account_id: uuid.UUID = None,
         search_query: str = None,
-        only_yours: bool = True,
     ):
 
         conditions = [
             self.model.is_active == True,
             self.model.is_deleted == False,
+            self.model.account_id == account_id,
         ]
         if search_query:
             conditions.append(self.model.title.ilike(f"%{search_query}%"))
-        if only_yours:
-            conditions.append(self.model.account_id == account_id)
-        else:
-            conditions.append(
-                or_(self.model.is_open == True, self.model.uuid == account_id)
-            )
 
         query = (
             select(self.model)

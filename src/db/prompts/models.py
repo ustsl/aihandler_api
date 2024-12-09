@@ -1,5 +1,5 @@
 import uuid
-from src.db.prompt_systems.models import PromptSystemPromptModel
+from src.db.scenarios.models import ScenarioPromptsModel
 from sqlalchemy import Column, ForeignKey, String, Boolean, Integer, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -28,6 +28,6 @@ class PromptModel(MaintenanceModel, TimeModel):
     account = relationship("UserAccountModel", back_populates="prompts")
     queries = relationship("QueryModel", back_populates="prompt")
     settings = relationship("UserSettingsModel", back_populates="prompt")
-    systems = relationship(
-        PromptSystemPromptModel, back_populates="prompt", cascade="all, delete-orphan"
+    scenario = relationship(
+        ScenarioPromptsModel, back_populates="prompt", cascade="all, delete-orphan"
     )
