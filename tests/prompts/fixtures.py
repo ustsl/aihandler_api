@@ -1,7 +1,7 @@
 import pytest
+
 from tests.conftest import *
 from tests.users.fixtures import *
-
 
 prompt_data_cache = {}
 

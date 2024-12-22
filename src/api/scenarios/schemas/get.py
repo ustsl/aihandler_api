@@ -1,12 +1,9 @@
 import re
-from typing import List, Optional, Union
+from datetime import datetime
+from typing import List, Optional
 from uuid import UUID
-from datetime import datetime
 
-from pydantic import BaseModel, EmailStr, field_validator
-from datetime import datetime
-
-from src.settings import ALLOWED_MODELS
+from pydantic import BaseModel
 
 #########################
 # BLOCK WITH API MODELS #
@@ -23,3 +20,20 @@ class ScenarioGetSchema(BaseModel):
 class ScenariosGetListSchema(BaseModel):
     result: List[ScenarioGetSchema]
     total: int
+
+
+class ScenarioPromptsGetBodySchema(BaseModel):
+    prompt_id: UUID
+    title: str
+    description: str
+    order: int
+    independent: bool
+    model: str
+
+
+class ScenarioGetFullSchema(BaseModel):
+    uuid: UUID
+    title: str
+    description: str
+    prompts: Optional[List[ScenarioPromptsGetBodySchema]] = []
+    time_create: datetime

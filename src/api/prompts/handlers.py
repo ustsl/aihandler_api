@@ -1,16 +1,13 @@
 from uuid import UUID
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.api.prompts.actions import (
-    _create_new_prompt,
-    _delete_prompt,
-    _show_prompt,
-    _show_prompts,
-    _update_prompt,
-)
-from src.api.prompts.schemas import GPTPromptCreate, GPTPromptBase, GPTPromptList
 
-
+from src.api.prompts.actions import (_create_new_prompt, _delete_prompt,
+                                     _show_prompt, _show_prompts,
+                                     _update_prompt)
+from src.api.prompts.schemas import (GPTPromptBase, GPTPromptCreate,
+                                     GPTPromptList)
 from src.api.utils import verify_user_data
 from src.db.session import get_db
 

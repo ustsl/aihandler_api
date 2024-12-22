@@ -1,5 +1,6 @@
 import pytest
-from tests.conftest import client, HEADERS
+
+from tests.conftest import HEADERS, client
 
 
 @pytest.fixture(scope="session")

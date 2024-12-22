@@ -1,8 +1,5 @@
-from src.modules.gpt.modules.param import (
-    model_price,
-    dalee_quality,
-    dalee_size,
-)
+from src.modules.gpt.modules.param import (dalee_quality, dalee_size,
+                                           model_price)
 
 
 class GptTokenCalculator:

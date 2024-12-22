@@ -1,5 +1,6 @@
-import httpx
 from functools import wraps
+
+import httpx
 
 
 def handle_exceptions(func):

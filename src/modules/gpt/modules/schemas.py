@@ -1,7 +1,9 @@
-from src.modules.gpt.modules.param import dalee_quality, dalee_size, dalee_style
+from typing import Dict, Optional
 
 from pydantic import BaseModel, Field, field_validator
-from typing import Optional, Dict
+
+from src.modules.gpt.modules.param import (dalee_quality, dalee_size,
+                                           dalee_style)
 
 
 class TuningModel(BaseModel):

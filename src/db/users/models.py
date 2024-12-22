@@ -1,9 +1,11 @@
-from sqlalchemy import Column, Numeric, String, ForeignKey
+import uuid
+
+from sqlalchemy import Column, ForeignKey, Numeric, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from src.db.models import TimeModel, MaintenanceModel, Base
+
+from src.db.models import Base, MaintenanceModel, TimeModel
 from src.db.users.mixins import UserRelationMixin
-import uuid
 
 
 class UserModel(MaintenanceModel):

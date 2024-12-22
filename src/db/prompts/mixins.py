@@ -1,6 +1,6 @@
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import declared_attr, Mapped, relationship
 from sqlalchemy import Column, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, declared_attr, relationship
 
 
 class PromptRelationMixin:

@@ -1,10 +1,10 @@
-from tests.prompts.fixtures import *
 from tests.conftest import client
+from tests.prompts.fixtures import *
 
 
 def test_query_story():
     headers = HEADERS
-    query = f"v1/queries/"
+    query = f"v1/analytics/queries/"
     response = client.get(
         query,
         headers=headers,

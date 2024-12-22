@@ -1,7 +1,6 @@
 import asyncio
 from typing import AsyncGenerator
 
-
 import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
@@ -9,13 +8,10 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
-
-from src.db.session import get_db
-from src.settings import TEST_DATABASE_URL, SERVICE_TOKEN
 from src.db.models import Base
-
-
+from src.db.session import get_db
 from src.main import app
+from src.settings import SERVICE_TOKEN, TEST_DATABASE_URL
 
 # DATABASE
 

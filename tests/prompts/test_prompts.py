@@ -2,6 +2,7 @@ from tests.conftest import client
 from tests.prompts.fixtures import *
 from tests.users.fixtures import *
 
+
 async def test_clean_prompt_story(user_data_with_prompt):
 
     user_data = user_data_with_prompt

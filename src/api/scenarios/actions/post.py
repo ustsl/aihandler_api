@@ -1,12 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.scenarios.schemas.post import ScenarioPostSchema
 from src.api.scenarios.schemas.get import ScenarioGetSchema
-
+from src.api.scenarios.schemas.post import ScenarioPostSchema
 from src.api.users.actions.account_user_actions import _get_user_account
 from src.api.utils import handle_dal_errors
-
-
 from src.db.scenarios.dals import ScenarioDAL
 from src.db.scenarios.models import ScenarioModel
 

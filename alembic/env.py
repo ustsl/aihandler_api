@@ -1,12 +1,10 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-
 from src.db.models import Base
-from src.settings import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST
+from src.settings import DB_HOST, DB_NAME, DB_PASSWORD, DB_USER
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -27,14 +25,10 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 from src.db.prompts.models import PromptModel
-from src.db.scenarios.models import ScenarioPromptsModel, ScenarioModel
-from src.db.users.models import (
-    UserModel,
-    UserTokenModel,
-    UserAccountModel,
-    UserSettingsModel,
-)
 from src.db.queries.models import QueryModel
+from src.db.scenarios.models import ScenarioModel, ScenarioPromptsModel
+from src.db.users.models import (UserAccountModel, UserModel,
+                                 UserSettingsModel, UserTokenModel)
 
 target_metadata = Base.metadata
 

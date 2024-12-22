@@ -1,4 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.users.actions.base_user_actions import _get_user
 from src.api.users.schemas import SettingsGetData
 from src.db.users.dals.settings import UserSettingsDal

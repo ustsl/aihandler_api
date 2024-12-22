@@ -1,19 +1,16 @@
-from fastapi import HTTPException
-from src.api.users.actions.base_user_actions import _get_user
+import uuid
 
+from fastapi import HTTPException
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.api.users.actions.base_user_actions import _get_user
 from src.api.users.schemas import TokenData
 from src.api.utils import handle_dal_errors
-
 from src.db.adapter import model_to_dict
 from src.db.users.dals.token import UserTokenDal
 from src.db.users.dals.user import UsersDAL
-
 from src.db.users.models import UserModel, UserTokenModel
-
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound
-
-import uuid
 
 
 @handle_dal_errors

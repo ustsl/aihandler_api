@@ -1,18 +1,21 @@
+import uuid
+from decimal import Decimal
+
+from sqlalchemy import select
+from sqlalchemy.orm import joinedload
+
 from src.db.dals import BaseDAL
+from src.db.users.models import (UserAccountModel, UserSettingsModel,
+                                 UserTokenModel)
+from src.db.utils import exception_dal
 
 ###########################################################
 # BLOCK FOR INTERACTION WITH DATABASE IN BUSINESS CONTEXT #
 ###########################################################
 
-from sqlalchemy import select
 
 
-import uuid
-from decimal import Decimal
-from sqlalchemy.orm import joinedload
 
-from src.db.users.models import UserAccountModel, UserTokenModel, UserSettingsModel
-from src.db.utils import exception_dal
 
 
 class UsersDAL(BaseDAL):

@@ -1,4 +1,5 @@
 from sqlalchemy import desc, func, select
+
 from src.db.dals import BaseDAL
 from src.db.utils import exception_dal
 

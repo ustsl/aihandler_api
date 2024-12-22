@@ -1,24 +1,22 @@
-import uuid
 from fastapi import APIRouter, Depends
-from fastapi_users import FastAPIUsers
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.queries.actions import _create_query, _show_queries, _show_personal_queries
-from src.api.queries.schemas import UserQueryBase, UserQueryResult
-
-from src.api.utils import verify_token, verify_user_data
-
+from src.api.queries.actions.analytics.get import _show_personal_queries
+from src.api.queries.actions.prompt_query.post import _create_query
+from src.api.queries.actions.scenario.post import _start_scenario
+from src.api.queries.schemas import (
+    UserQueryBase,
+    UserQueryResult,
+    UserQueryScenarioBase,
+    UserQueryScenarioResult,
+)
+from src.api.utils import verify_user_data
 from src.db.session import get_db
 
+query_router = APIRouter(dependencies=[Depends(verify_user_data)])
 
-query_router = APIRouter()
 
-
-@query_router.post(
-    "/{telegram_id}",
-    response_model=UserQueryResult,
-    dependencies=[Depends(verify_user_data)],
-)
+@query_router.post("/{telegram_id}", response_model=UserQueryResult)
 async def create_query(
     telegram_id: str,
     body: UserQueryBase,
@@ -41,18 +39,23 @@ async def create_query(
     return res
 
 
-@query_router.get("/", dependencies=[Depends(verify_token)])
-async def get_queries(
-    offset: int = 0,
+@query_router.post(
+    "/{telegram_id}/scenario"
+)  # , response_model=UserQueryScenarioResult)
+async def start_scenario(
+    telegram_id: str,
+    body: UserQueryScenarioBase,
     db: AsyncSession = Depends(get_db),
 ):
-    res = await _show_queries(offset=offset, db=db)
-    return res
+
+    result = await _start_scenario(
+        telegram_id=telegram_id, scenario_id=body.scenario_id, query=body.query, db=db
+    )
+
+    return result
 
 
-@query_router.get(
-    "/{telegram_id}/{prompt_id}", dependencies=[Depends(verify_user_data)]
-)
+@query_router.get("/{telegram_id}/{prompt_id}")
 async def get_prompt_personal_queries(
     prompt_id: str,
     offset: int = 0,

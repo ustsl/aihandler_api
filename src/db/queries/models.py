@@ -1,13 +1,13 @@
-from sqlalchemy import Column, String, ForeignKey, DateTime
+import uuid
+
+from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from src.db.users.mixins import UserRelationMixin
-from src.db.prompts.mixins import PromptRelationMixin
+
 from src.db.models import Base
-
-import uuid
-
+from src.db.prompts.mixins import PromptRelationMixin
+from src.db.users.mixins import UserRelationMixin
 
 ##############################
 # BLOCK WITH DATABASE MODELS #

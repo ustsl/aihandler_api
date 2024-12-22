@@ -1,7 +1,8 @@
-from decimal import ROUND_UP, Decimal
 import uuid
-from sqlalchemy.ext.asyncio import AsyncSession
+from decimal import ROUND_UP, Decimal
+
 from sqlalchemy import select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import DeclarativeMeta
 
 

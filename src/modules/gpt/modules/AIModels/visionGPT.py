@@ -3,7 +3,6 @@ import httpx
 from src.modules.gpt.modules.calc import GptTokenCalculator
 from src.modules.gpt.modules.exception_wrapper import handle_exceptions
 from src.modules.gpt.modules.interface import AIQueryInterface
-
 from src.settings import OPENAI_TOKEN
 
 

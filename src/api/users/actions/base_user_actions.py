@@ -1,17 +1,12 @@
 from fastapi import HTTPException
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.users.schemas import (
-    UserDataBase,
-    UserDataExtend,
-)
+from src.api.users.schemas import UserDataBase, UserDataExtend
 from src.api.utils import handle_dal_errors
-
 from src.db.adapter import model_to_dict
 from src.db.users.dals.user import UsersDAL
 from src.db.users.models import UserModel
-
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound
 
 
 @handle_dal_errors

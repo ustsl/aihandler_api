@@ -1,16 +1,12 @@
-from sqlalchemy.orm import selectinload
 import uuid
 
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.exc import NoResultFound
-from sqlalchemy import desc, func, select
-
+from sqlalchemy.orm import selectinload
 
 from src.db.dals import BaseDAL
 from src.db.prompts.models import PromptModel
 from src.db.users.models import UserAccountModel
-
-from sqlalchemy import or_
-
 from src.db.utils import exception_dal
 
 ###########################################################

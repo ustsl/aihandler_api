@@ -1,11 +1,11 @@
 import uuid
 
-from sqlalchemy import Column, ForeignKey, String, Integer
+from sqlalchemy import (Boolean, Column, ForeignKey, Integer, String,
+                        UniqueConstraint)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
-from src.db.models import MaintenanceModel, TimeModel
-
+from src.db.models import Base, MaintenanceModel, TimeModel
 
 ################################
 ###BLOCK WITH DATABASE MODELS###
@@ -26,8 +26,12 @@ class ScenarioModel(MaintenanceModel, TimeModel):
     )
 
 
-class ScenarioPromptsModel(MaintenanceModel, TimeModel):
+class ScenarioPromptsModel(Base):
     __tablename__ = "scenario_prompts_relation"
+
+    __table_args__ = (
+        UniqueConstraint("scenario_id", "prompt_id", name="uq_scenario_prompt"),
+    )
 
     uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     scenario_id = Column(
@@ -36,6 +40,7 @@ class ScenarioPromptsModel(MaintenanceModel, TimeModel):
         nullable=False,
     )
     prompt_id = Column(UUID(as_uuid=True), ForeignKey("prompts.uuid"), nullable=False)
-    order = Column(Integer, nullable=False, default=0)
 
     prompt = relationship("PromptModel", back_populates="scenario")
+    independent = Column(Boolean(), default=False)
+    order = Column(Integer, nullable=False, default=0)

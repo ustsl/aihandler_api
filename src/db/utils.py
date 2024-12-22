@@ -1,5 +1,6 @@
 from functools import wraps
-from typing import Callable, Any, Awaitable
+from typing import Any, Awaitable, Callable
+
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 
 

@@ -1,7 +1,7 @@
 import uuid
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from sqlalchemy import desc, select, update, func
+from sqlalchemy import desc, func, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.declarative import DeclarativeMeta
 
 from src.db.utils import exception_dal
@@ -19,14 +19,18 @@ class BaseDAL:
     @exception_dal
     async def create(self, **data):
         try:
-            new_prompt = self.model(**data)
-            self.db_session.add(new_prompt)
+            new_obj = self.model(**data)
+            self.db_session.add(new_obj)
             await self.db_session.flush()
-            return new_prompt
+            return new_obj
         except Exception as e:
             await self.db_session.rollback()
             error_msg = f"Error creating object: {str(e)}"
             return {"error": error_msg}
+
+    async def create_safe(self, **data):
+        new_obj = self.model(**data)
+        self.db_session.add(new_obj)
 
     @exception_dal
     async def list(self, page_size: int = 30, offset: int = 0, order_param="uuid"):
@@ -73,7 +77,6 @@ class BaseDAL:
             await self.db_session.rollback()
             return {"error": f"Error updating: {str(e)}"}
 
-    @exception_dal
     async def delete(self, id: uuid.UUID):
         try:
             query = (

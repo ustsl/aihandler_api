@@ -1,23 +1,12 @@
-from src.settings import SERVICE_TOKEN
-
 from functools import wraps
 
+from fastapi import Depends, File, HTTPException, Request, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from fastapi import (
-    File,
-    Request,
-    HTTPException,
-    UploadFile,
-    status,
-    Depends,
-    HTTPException,
-)
-
-
+from src.db.session import get_db
 from src.db.users.dals.user import UsersDAL
 from src.db.users.models import UserModel
-from src.db.session import get_db
+from src.settings import SERVICE_TOKEN
 
 
 def handle_dal_errors(func):

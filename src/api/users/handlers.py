@@ -1,28 +1,19 @@
 import uuid
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.users.actions.account_user_actions import _update_user_account_balance
-from src.api.users.actions.base_user_actions import (
-    _block_user,
-    _create_new_user,
-    _get_user,
-    _get_users,
-)
-
-from src.api.users.schemas import SettingsGetData
-
+from src.api.users.actions.account_user_actions import \
+    _update_user_account_balance
+from src.api.users.actions.base_user_actions import (_block_user,
+                                                     _create_new_user,
+                                                     _get_user, _get_users)
 from src.api.users.actions.settings_actions import _update_user_settings
 from src.api.users.actions.token_actions import _update_user_token
+from src.api.users.schemas import (SettingsGetData, TokenData, UserBalance,
+                                   UserDataBase, UserDataExtend)
 from src.api.utils import verify_token
 from src.db.session import get_db
-
-from src.api.users.schemas import (
-    TokenData,
-    UserBalance,
-    UserDataBase,
-    UserDataExtend,
-)
 
 user_router = APIRouter(dependencies=[Depends(verify_token)])
 
