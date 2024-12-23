@@ -25,7 +25,6 @@ async def test_prompt_story_with_prompt(user_data_with_prompt, prompt_data):
 
     headers = {"Authorization": user_data.get("token").get("token")}
     query = f"v1/prompts/{user_id}"
- 
 
     response = client.get(
         query,
@@ -33,7 +32,7 @@ async def test_prompt_story_with_prompt(user_data_with_prompt, prompt_data):
     )
 
     assert response.status_code == 200
-    
+
     assert len(response.json().get("result")) == 1
 
 
@@ -75,9 +74,9 @@ async def test_create_prompt_to_blocked_user(user_data_with_block):
             "account_id": account_id,
             "is_open": True,
             "context_story_window": 5,
-            "tuning": {}
+            "tuning": {},
         },
         headers=headers,
     )
     result = prompt_result.json()
-    assert result.get("detail") == 'Blocked'
+    assert result.get("detail") == "Blocked"
