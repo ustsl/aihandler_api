@@ -43,8 +43,7 @@ async def _update_scenario(
             for prompt in prompts:
                 prompt_object = await prompt_dal.get(prompt.prompt_id)
                 if prompt_object and (
-                    prompt_object.is_open
-                    or telegram_id == prompt_object.account_telegram_id
+                    account == prompt_object.account_id or prompt_object.is_open
                 ):
                     data = {
                         "scenario_id": scenario_id,
