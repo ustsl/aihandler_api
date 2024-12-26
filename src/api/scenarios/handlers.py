@@ -4,16 +4,16 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.scenarios.actions.delete import _delete_scenario
-from src.api.scenarios.actions.get import (_get_scenario_detail,
-                                           _get_scenario_list)
+from src.api.scenarios.actions.get import _get_scenario_detail, _get_scenario_list
 from src.api.scenarios.actions.post import _create_scenario
 from src.api.scenarios.actions.update import _update_scenario
-from src.api.scenarios.schemas.get import (ScenarioGetFullSchema,
-                                           ScenarioGetSchema,
-                                           ScenariosGetListSchema)
+from src.api.scenarios.schemas.get import (
+    ScenarioGetFullSchema,
+    ScenarioGetSchema,
+    ScenariosGetListSchema,
+)
 from src.api.scenarios.schemas.post import ScenarioPostSchema
-from src.api.scenarios.schemas.put import (ScenarioGetAfterUpdateFullSchema,
-                                           ScenarioUpdateBodySchema)
+from src.api.scenarios.schemas.put import ScenarioUpdateBodySchema
 from src.api.utils import verify_user_data
 from src.db.session import get_db
 
