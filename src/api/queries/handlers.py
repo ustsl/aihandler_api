@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -39,9 +40,7 @@ async def create_query(
     return res
 
 
-@query_router.post(
-    "/{telegram_id}/scenario"
-)  # , response_model=UserQueryScenarioResult)
+@query_router.post("/{telegram_id}/scenario", response_model=List[UserQueryResult])
 async def start_scenario(
     telegram_id: str,
     body: UserQueryScenarioBase,

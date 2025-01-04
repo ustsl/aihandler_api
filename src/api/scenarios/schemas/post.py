@@ -1,11 +1,6 @@
 import re
-from datetime import datetime
-from typing import List, Optional, Union
-from uuid import UUID
+from pydantic import BaseModel, field_validator
 
-from pydantic import BaseModel, EmailStr, field_validator
-
-from src.settings import ALLOWED_MODELS
 
 #########################
 # BLOCK WITH API MODELS #

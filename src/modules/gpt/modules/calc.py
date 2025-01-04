@@ -1,5 +1,4 @@
-from src.modules.gpt.modules.param import (dalee_quality, dalee_size,
-                                           model_price)
+from src.modules.gpt.modules.param import dalee_quality, dalee_size, model_price
 
 
 class GptTokenCalculator:
@@ -20,7 +19,7 @@ class GptTokenCalculator:
 
 class GptImageCalculator:
     def __init__(self, quality, size):
-        print(quality, size)
+
         self._model = "dall-e-3"
         self._quality = quality
         self._size = size

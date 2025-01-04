@@ -8,10 +8,7 @@ async def test_success_create_scenario(
 
     user_data = user_data_with_prompt
 
-    account_id = user_data.get("accounts").get("uuid")
     telegram_id = user_data.get("telegram_id")
-
-    print(user_data)
 
     token = user_data.get("token").get("token")
     headers = {"Authorization": token}
@@ -48,11 +45,13 @@ async def test_success_create_scenario(
 
     post_query_body = {"scenario_id": scenario_with_relations.get("uuid"), "query": "2"}
 
-    client.put(
+    balance = client.put(
         f"v1/users/{telegram_id}/balance",
-        json={"balance": 1},
+        json={"balance": 10},
         headers=HEADERS,
     )
+
+    print(balance.json())
 
     scenario_query = client.post(
         f"v1/queries/{telegram_id}/scenario",

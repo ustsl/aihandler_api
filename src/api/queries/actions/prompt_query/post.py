@@ -26,7 +26,6 @@ async def _create_query(
             prompt = await _show_prompt(
                 prompt_id=prompt_id, telegram_id=telegram_id, db=db
             )
-
             if prompt.context_story_window > 0:
                 story_crop = await story_crop_function(
                     story, prompt.context_story_window

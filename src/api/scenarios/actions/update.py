@@ -42,8 +42,9 @@ async def _update_scenario(
         async with db.begin():
             for prompt in prompts:
                 prompt_object = await prompt_dal.get(prompt.prompt_id)
+
                 if prompt_object and (
-                    account == prompt_object.account_id or prompt_object.is_open
+                    account.uuid == prompt_object.account_id or prompt_object.is_open
                 ):
                     data = {
                         "scenario_id": scenario_id,

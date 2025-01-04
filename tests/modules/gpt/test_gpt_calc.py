@@ -8,10 +8,13 @@ async def test_gpt_token_calc():
     assert price == 0.03
     calculator = GptTokenCalculator(model="gpt-4-turbo", value=1000)
     price = calculator.calc()
-    assert price == 0.08
+    assert price == 0.05
     calculator = GptTokenCalculator(model="gpt-4o", value=1000)
     price = calculator.calc()
-    assert price == 0.08
+    assert price == 0.06
+    calculator = GptTokenCalculator(model="gpt-4o-mini", value=1000)
+    price = calculator.calc()
+    assert price == 0.02
 
 
 async def test_gpt_image_calc():
