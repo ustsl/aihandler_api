@@ -35,6 +35,7 @@ class CreateGPTResponse(AIQueryInterface):
                     "messages": messages,
                 },
             )
+
             response.raise_for_status()
             completion = response.json()
 

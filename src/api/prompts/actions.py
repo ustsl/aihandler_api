@@ -3,8 +3,13 @@ from uuid import UUID
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.prompts.schemas import (GPTPromptBase, GPTPromptCreate,
-                                     GPTPromptList, GPTPromptShow)
+from src.api.prompts.schemas import (
+    GPTPromptBase,
+    GPTPromptCreate,
+    GPTPromptList,
+    GPTPromptShow,
+    GPTPromptShowFull,
+)
 from src.api.users.actions.account_user_actions import _get_user_account
 from src.api.utils import handle_dal_errors
 from src.db.prompts.dals import PromptDAL
@@ -48,20 +53,21 @@ async def _show_prompts(
 
 
 @handle_dal_errors
-async def _show_prompt(
-    prompt_id: str, telegram_id: str, db: AsyncSession
-) -> GPTPromptShow:
+async def _show_prompt(prompt_id: str, user_id: str, db: AsyncSession) -> GPTPromptShow:
     obj_dal = PromptDAL(db, PromptModel)
     prompt = await obj_dal.get(prompt_id)
 
     if prompt:
-        if prompt.is_open == True or (telegram_id == prompt.account.user.telegram_id):
-            return GPTPromptShow(
+
+        if prompt.is_open == True or (user_id == prompt.account.user_id):
+
+            return GPTPromptShowFull(
                 uuid=prompt.uuid,
                 title=prompt.title,
                 description=prompt.description,
                 model=prompt.model,
                 account_id=str(prompt.account_id),
+                user_id=prompt.account.user_id,
                 is_deleted=prompt.is_deleted,
                 prompt=prompt.prompt,
                 is_open=prompt.is_open,

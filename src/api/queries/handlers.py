@@ -9,8 +9,8 @@ from src.api.queries.schemas import (
     UserQueryBase,
     UserQueryResult,
     UserQueryScenarioBase,
-    UserQueryScenarioResult,
 )
+from src.api.users.actions.base_user_actions import _get_user
 from src.api.utils import verify_user_data
 from src.db.session import get_db
 
@@ -24,13 +24,15 @@ async def create_query(
     db: AsyncSession = Depends(get_db),
 ) -> UserQueryResult:
 
+    user = await _get_user(telegram_id=telegram_id, db=db)
+
     vision = False
     if body.vision and body.vision == True:
         vision = body.vision
 
     res = await _create_query(
         prompt_id=body.prompt_id,
-        telegram_id=telegram_id,
+        user_id=user.uuid,
         query=body.query,
         story=body.story,
         vision=vision,

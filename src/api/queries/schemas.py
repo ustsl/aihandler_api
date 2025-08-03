@@ -23,7 +23,7 @@ class UserQueryBase(BaseModel):
 
 class UserQueryResult(BaseModel):
     result: str
-    cost: float = None
+    cost: float = 0
 
 
 class UserQueryStore(UserQueryBase):

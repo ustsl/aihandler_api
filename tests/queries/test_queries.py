@@ -56,7 +56,7 @@ def test_gpt_query_no_balance(prompt_data, user_data_with_prompt):
         query,
         json={
             "prompt_id": prompt_data.get("id"),
-            "query": "merhaba",
+            "query": "merhaba merhaba",
         },
         headers=headers,
     )

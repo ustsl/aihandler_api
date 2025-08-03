@@ -6,6 +6,7 @@ from src.modules.gpt.modules.AIModels.visionGPT import CreateGPTImageResponse
 
 
 async def factory(response_model: str, params: dict) -> dict:
+
     try:
         query = response_model(params)
         await query.generate()
@@ -18,6 +19,10 @@ async def factory(response_model: str, params: dict) -> dict:
 
 
 async def gpt_handler(params):
+
+    print(params)
+    print(3284798329872398498273498)
+
     if params.get("model") == "dall-e-3":
         response_model = CreateDaleeResponse
     elif params.get("model") == "gpt-4o" and params.get("vision") == True:

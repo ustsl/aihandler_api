@@ -57,6 +57,10 @@ class GPTPromptShow(GPTPromptBase):
     time_update: datetime
 
 
+class GPTPromptShowFull(GPTPromptShow):
+    user_id: UUID
+
+
 class GPTPromptList(BaseModel):
     total: int
     result: List[GPTPromptShow]

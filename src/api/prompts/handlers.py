@@ -3,11 +3,15 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.prompts.actions import (_create_new_prompt, _delete_prompt,
-                                     _show_prompt, _show_prompts,
-                                     _update_prompt)
-from src.api.prompts.schemas import (GPTPromptBase, GPTPromptCreate,
-                                     GPTPromptList)
+from src.api.prompts.actions import (
+    _create_new_prompt,
+    _delete_prompt,
+    _show_prompt,
+    _show_prompts,
+    _update_prompt,
+)
+from src.api.prompts.schemas import GPTPromptBase, GPTPromptCreate, GPTPromptList
+from src.api.users.actions.base_user_actions import _get_user
 from src.api.utils import verify_user_data
 from src.db.session import get_db
 
@@ -41,7 +45,8 @@ async def get_prompt(
     prompt_id: UUID,
     db: AsyncSession = Depends(get_db),
 ):
-    prompt = await _show_prompt(prompt_id=prompt_id, telegram_id=telegram_id, db=db)
+    user = await _get_user(telegram_id=telegram_id, db=db)
+    prompt = await _show_prompt(prompt_id=prompt_id, user_id=user.uuid, db=db)
     return prompt
 
 
