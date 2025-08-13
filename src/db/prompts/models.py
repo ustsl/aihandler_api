@@ -18,7 +18,7 @@ class PromptModel(MaintenanceModel, TimeModel):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     prompt = Column(String, nullable=False)
-    model = Column(String, default="gpt-3.5-turbo", nullable=False)
+    model = Column(String, default="gpt-5-nano", nullable=False)
     is_open = Column(Boolean(), default=True, nullable=True)
     context_story_window = Column(Integer, default=0, nullable=True)
     account_id = Column(UUID(as_uuid=True), ForeignKey("accounts.uuid"), nullable=False)

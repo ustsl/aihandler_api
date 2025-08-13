@@ -35,15 +35,16 @@ MAIN_DATABASE_URL = env.str(
     default=f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/aihandler_db",
 )
 
-ALLOWED_MODELS = [
-    "gpt-4o-mini",
-    "gpt-4o-mini-audio-preview",
-    "gpt-3.5-turbo",
-    "gpt-3.5-turbo-0125",
-    "gpt-4-turbo",
-    "gpt-4-turbo-2024-04-09",
-    "gpt-4o",
-    "gpt-4o-audio-preview",
-    "o1",
-    "dall-e-3",
-]
+
+ALLOWED_MODELS_WITH_PRICE = {
+    "gpt-5": 2,
+    "gpt-5-mini": 0.5,
+    "gpt-5-nano": 0.05,
+    "gpt-4o": 0.08,
+    "dall-e-3": 0.15,
+    "gpt-4o-mini": 0.02,
+    "gpt-4o-mini-audio-preview": 0.04,
+    "gpt-4o-audio-preview": 0.07,
+}
+
+ALLOWED_MODELS = list(ALLOWED_MODELS_WITH_PRICE.keys())

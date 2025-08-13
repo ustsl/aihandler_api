@@ -1,11 +1,12 @@
-from src.modules.gpt.modules.param import dalee_quality, dalee_size, model_price
+from src.modules.gpt.modules.param import dalee_quality, dalee_size
+from src.settings import ALLOWED_MODELS_WITH_PRICE
 
 
 class GptTokenCalculator:
     def __init__(self, model, value):
         self._model = model
         self._value = value
-        self._model_price = model_price
+        self._model_price = ALLOWED_MODELS_WITH_PRICE
         self.price_per_unit = self._get_price_for_model()
 
     def _get_price_for_model(self):
@@ -23,7 +24,7 @@ class GptImageCalculator:
         self._model = "dall-e-3"
         self._quality = quality
         self._size = size
-        self._model_price = model_price
+        self._model_price = ALLOWED_MODELS_WITH_PRICE
         self._dalee_quality = dalee_quality
         self._dalee_size = dalee_size
 
