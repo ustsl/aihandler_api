@@ -1,8 +1,7 @@
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Index, String, text
+from sqlalchemy import Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from src.db.models import Base
@@ -22,6 +21,6 @@ class QueryModel(Base, UserRelationMixin, PromptRelationMixin):
 
     uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 
-    query = Column(String, nullable=False, index=True)
+    query = Column(String, nullable=False)
     result = Column(String, nullable=True)
     time_create = Column(DateTime(timezone=True), default=func.now())
