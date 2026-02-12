@@ -1,4 +1,5 @@
 import os
+from typing import Literal, TypeAlias, get_args
 
 from dotenv import load_dotenv
 from envparse import Env
@@ -36,15 +37,30 @@ MAIN_DATABASE_URL = env.str(
 )
 
 
+GPTModelName: TypeAlias = Literal[
+    "gpt-3.5-turbo",
+    "gpt-4-turbo",
+    "gpt-4o",
+    "gpt-4o-mini",
+    "gpt-4o-mini-audio-preview",
+    "gpt-4o-audio-preview",
+    "gpt-5",
+    "gpt-5-mini",
+    "gpt-5-nano",
+    "dall-e-3",
+]
+
 ALLOWED_MODELS_WITH_PRICE = {
-    "gpt-5": 2,
-    "gpt-5-mini": 0.5,
-    "gpt-5-nano": 0.05,
-    "gpt-4o": 0.08,
-    "dall-e-3": 0.15,
-    "gpt-4o-mini": 0.02,
-    "gpt-4o-mini-audio-preview": 0.04,
-    "gpt-4o-audio-preview": 0.07,
+    "gpt-3.5-turbo": 0.045,
+    "gpt-4-turbo": 0.075,
+    "gpt-4o": 0.12,
+    "gpt-4o-mini": 0.03,
+    "gpt-4o-mini-audio-preview": 0.06,
+    "gpt-4o-audio-preview": 0.105,
+    "gpt-5": 3.0,
+    "gpt-5-mini": 0.75,
+    "gpt-5-nano": 0.075,
+    "dall-e-3": 0.225,
 }
 
-ALLOWED_MODELS = list(ALLOWED_MODELS_WITH_PRICE.keys())
+ALLOWED_MODELS = list(get_args(GPTModelName))

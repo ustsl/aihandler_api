@@ -14,32 +14,25 @@ async def _start_scenario(
     query: str,
     db: AsyncSession,
 ):
-
     user = await _get_user(telegram_id=telegram_id, db=db)
     scenario_object = await _get_scenario_detail(
         telegram_id=telegram_id, scenario_id=scenario_id, db=db
     )
 
     results = []
-
     previous_result = ""
 
     for prompt in scenario_object.prompts:
-
-        if prompt.independent:
-            query = query
-        else:
-            query = previous_result
+        current_query = query if prompt.independent else previous_result
 
         query_result = await _create_query(
             user_id=user.uuid,
             prompt_id=prompt.prompt_id,
-            query=query,
+            query=current_query,
             db=db,
         )
 
         previous_result = query_result.get("result", "")
-
         results.append(query_result)
 
     return results

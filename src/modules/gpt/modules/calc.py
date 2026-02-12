@@ -10,7 +10,7 @@ class GptTokenCalculator:
         self.price_per_unit = self._get_price_for_model()
 
     def _get_price_for_model(self):
-        default_price = 0.08
+        default_price = 0.12
         return self._model_price.get(self._model, default_price)
 
     def calc(self):

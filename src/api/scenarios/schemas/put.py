@@ -6,7 +6,6 @@ from uuid import UUID
 from pydantic import BaseModel, EmailStr, field_validator
 
 from src.api.scenarios.schemas.post import ScenarioPostSchema
-from src.settings import ALLOWED_MODELS
 
 #########################
 # BLOCK WITH API MODELS #

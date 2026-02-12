@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Literal, Optional
 from uuid import UUID
 
 from pydantic import BaseModel, field_validator
@@ -21,9 +21,24 @@ class UserQueryBase(BaseModel):
         return value
 
 
+class QueryQualityMetrics(BaseModel):
+    response_type: Literal["text", "url"]
+    overall_score: float
+    relevance_score: float
+    completeness_score: float
+    coherence_score: float
+    lexical_diversity: float
+    query_term_coverage: float
+    word_count: int
+    sentence_count: int
+    char_count: int
+    cached: bool = False
+
+
 class UserQueryResult(BaseModel):
     result: str
     cost: float = 0
+    quality_metrics: QueryQualityMetrics
 
 
 class UserQueryStore(UserQueryBase):

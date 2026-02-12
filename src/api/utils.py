@@ -69,13 +69,6 @@ async def verify_file_format(file: UploadFile):
     return file
 
 
-async def verify_file_format(file: UploadFile):
-    allowed_formats = {"image/svg+xml", "image/png", "image/jpeg"}
-    if file.content_type not in allowed_formats:
-        raise HTTPException(status_code=400, detail="Invalid file format")
-    return file
-
-
 async def verify_file(file: UploadFile = File(...)):
     file = await verify_file_format(file)
     file = await verify_file_size(file)

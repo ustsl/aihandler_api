@@ -1,12 +1,17 @@
-# Example usage
-
 from src.modules.gpt.modules.AIModels.baseGPT import CreateGPTResponse
 from src.modules.gpt.modules.AIModels.dalleeGPT import CreateDaleeResponse
 from src.modules.gpt.modules.AIModels.visionGPT import CreateGPTImageResponse
 
 
-async def factory(response_model: str, params: dict) -> dict:
+def _resolve_response_model(params: dict):
+    if params.get("model") == "dall-e-3":
+        return CreateDaleeResponse
+    if params.get("model") == "gpt-4o" and params.get("vision") is True:
+        return CreateGPTImageResponse
+    return CreateGPTResponse
 
+
+async def factory(response_model, params: dict) -> dict:
     try:
         query = response_model(params)
         await query.generate()
@@ -19,15 +24,5 @@ async def factory(response_model: str, params: dict) -> dict:
 
 
 async def gpt_handler(params):
-
-    print(params)
-    print(3284798329872398498273498)
-
-    if params.get("model") == "dall-e-3":
-        response_model = CreateDaleeResponse
-    elif params.get("model") == "gpt-4o" and params.get("vision") == True:
-        response_model = CreateGPTImageResponse
-    else:
-        response_model = CreateGPTResponse
-    result = await factory(response_model=response_model, params=params)
-    return result
+    response_model = _resolve_response_model(params=params)
+    return await factory(response_model=response_model, params=params)

@@ -1,5 +1,13 @@
 # AI HANDLER
 
+## Local PostgreSQL (manual control)
+
+- Start DB: `sudo pg_ctlcluster 16 main start`
+- Stop DB: `sudo pg_ctlcluster 16 main stop`
+- Check DB status: `pg_isready -h 0.0.0.0 -p 5432`
+- Apply migrations (create/update tables): `.venv/bin/alembic upgrade heads`
+
+`postgresql` autostart is not required. Do not run `systemctl enable postgresql`.
 
 # Path for start:
 - alembic init migrations

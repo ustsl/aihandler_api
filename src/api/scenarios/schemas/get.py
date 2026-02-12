@@ -5,6 +5,8 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
+from src.settings import GPTModelName
+
 #########################
 # BLOCK WITH API MODELS #
 #########################
@@ -28,7 +30,7 @@ class ScenarioPromptsGetBodySchema(BaseModel):
     description: str
     order: int
     independent: bool
-    model: str
+    model: GPTModelName
 
 
 class ScenarioGetFullSchema(BaseModel):

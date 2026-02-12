@@ -7,12 +7,7 @@ class AIQueryInterface(ABC):
     @abstractmethod
     def generate(self):
         """
-        Generates a dictionary with keys 'result' and 'amount'.
-
-        Returns:
-            dict: A dictionary with:
-                - 'result' (str): A string result.
-                - 'amount' (float): A float amount.
+        Executes request to the provider and stores raw result on the instance.
         """
         pass
 

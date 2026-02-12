@@ -5,7 +5,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, field_validator
 
-from src.settings import ALLOWED_MODELS
+from src.settings import GPTModelName
 
 #########################
 # BLOCK WITH API MODELS #
@@ -16,16 +16,10 @@ class GPTPromptBase(BaseModel):
     title: str
     description: str
     prompt: str
-    model: str
+    model: GPTModelName
     is_open: bool
     context_story_window: Optional[Union[int, None]]
     tuning: Optional[Union[dict, None]] = None
-
-    @field_validator("model")
-    def validate_model(cls, value):
-        if not value in ALLOWED_MODELS:
-            raise ValueError("Model must be a real GPT model")
-        return value
 
     @field_validator("title")
     def validate_title(cls, value):
