@@ -13,6 +13,12 @@ from src.db.session import get_db
 from src.main import app
 from src.settings import SERVICE_TOKEN, TEST_DATABASE_URL
 
+pytest_plugins = [
+    "tests.users.fixtures",
+    "tests.prompts.fixtures",
+    "tests.scenarios.fixtures",
+]
+
 # DATABASE
 
 metadata = Base.metadata
@@ -51,6 +57,33 @@ def event_loop(request):
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
+
+
+def _mock_text_answer(message: str) -> str:
+    normalized = message.strip().lower()
+    if normalized == "merhaba":
+        return "hello"
+    if normalized.lstrip("-").isdigit():
+        return str(int(normalized) * 2)
+    return "0"
+
+
+@pytest.fixture()
+def gpt_call_log():
+    return []
+
+
+@pytest.fixture(autouse=True)
+def mock_gpt_handler(monkeypatch, gpt_call_log):
+    async def _mock_handler(params):
+        message = str(params.get("message") or "")
+        gpt_call_log.append(params)
+        return {"result": _mock_text_answer(message), "cost": 0.001}
+
+    monkeypatch.setattr(
+        "src.api.queries.actions.prompt_query.post.gpt_handler",
+        _mock_handler,
+    )
 
 
 client = TestClient(app)

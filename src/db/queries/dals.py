@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 from sqlalchemy import UUID, desc, func, select
 
 from src.db.dals import BaseDAL
@@ -41,10 +42,12 @@ class QueryDAL(BaseDAL):
         Находит самую новую запись с таким же prompt_id и query,
         которая была создана ПОСЛЕ указанного времени.
         """
+        query_hash = hashlib.md5(query_text.encode("utf-8")).hexdigest()
         query = (
             select(self.model)
             .where(
                 self.model.prompt_id == prompt_id,
+                func.md5(self.model.query) == query_hash,
                 self.model.query == query_text,
                 self.model.time_create > prompt_time_update,
             )

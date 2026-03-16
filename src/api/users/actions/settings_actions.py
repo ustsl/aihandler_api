@@ -11,5 +11,5 @@ async def _update_user_settings(
 ):
     user = await _get_user(telegram_id=telegram_id, db=db)
     obj_dal = UserSettingsDal(db, UserSettingsModel)
-    updates_dict = updates.dict()
+    updates_dict = updates.model_dump()
     return await obj_dal.update(uuid=str(user.settings.uuid), **updates_dict)

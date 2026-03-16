@@ -33,24 +33,23 @@ async def verify_user_data(
     request: Request, telegram_id: str, db: AsyncSession = Depends(get_db)
 ):
     token = request.headers.get("Authorization")
-    async with db as session:
-        userDal = UsersDAL(session, UserModel)
-        user = await userDal.get(telegram_id=telegram_id)
-        if not user or (isinstance(user, dict) and user.get("error")):
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found",
-            )
-        if str(user.token.token) != token:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid or missing token",
-            )
-        if user.is_active == False:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Blocked",
-            )
+    user_dal = UsersDAL(db, UserModel)
+    user = await user_dal.get(telegram_id=telegram_id)
+    if not user or (isinstance(user, dict) and user.get("error")):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    if str(user.token.token) != token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or missing token",
+        )
+    if not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Blocked",
+        )
 
 
 async def verify_file_size(file: UploadFile):

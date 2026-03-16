@@ -39,22 +39,21 @@ async def _update_scenario(
 
         prompt_dal = PromptDAL(db, PromptModel)
 
-        async with db.begin():
-            for prompt in prompts:
-                prompt_object = await prompt_dal.get(prompt.prompt_id)
+        for prompt in prompts:
+            prompt_object = await prompt_dal.get(prompt.prompt_id)
 
-                if prompt_object and (
-                    account.uuid == prompt_object.account_id or prompt_object.is_open
-                ):
-                    data = {
-                        "scenario_id": scenario_id,
-                        "prompt_id": prompt.prompt_id,
-                        "order": prompt.order,
-                        "independent": prompt.independent,
-                    }
+            if prompt_object and (
+                account.uuid == prompt_object.account_id or prompt_object.is_open
+            ):
+                data = {
+                    "scenario_id": scenario_id,
+                    "prompt_id": prompt.prompt_id,
+                    "order": prompt.order,
+                    "independent": prompt.independent,
+                }
 
-                    await ps_dal.create_safe(**data)
-            await db.commit()
+                await ps_dal.create_safe(**data)
+        await db.commit()
 
     object = await _get_scenario_detail(
         scenario_id=scenario_id, telegram_id=telegram_id, db=db

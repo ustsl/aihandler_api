@@ -12,17 +12,16 @@ from src.db.scenarios.models import ScenarioModel
 async def _create_scenario(
     body: ScenarioPostSchema, telegram_id: str, db: AsyncSession
 ) -> ScenarioGetSchema:
-    async with db as session:
-        async with session.begin():
-            account = await _get_user_account(telegram_id=telegram_id, db=db)
-            data_to_create = body.model_dump()
-            data_to_create["account_id"] = account.uuid
-            obj_dal = ScenarioDAL(session, ScenarioModel)
-            result = await obj_dal.create(**data_to_create)
+    account = await _get_user_account(telegram_id=telegram_id, db=db)
+    data_to_create = body.model_dump()
+    data_to_create["account_id"] = account.uuid
+    obj_dal = ScenarioDAL(db, ScenarioModel)
+    result = await obj_dal.create(**data_to_create)
+    await db.commit()
 
-            return ScenarioGetSchema(
-                id=result.uuid,
-                title=result.title,
-                description=result.description,
-                time_create=result.time_create,
-            )
+    return ScenarioGetSchema(
+        id=result.uuid,
+        title=result.title,
+        description=result.description,
+        time_create=result.time_create,
+    )

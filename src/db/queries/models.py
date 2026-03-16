@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, DateTime, String
+from sqlalchemy import Column, DateTime, Index, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 
@@ -15,6 +15,9 @@ from src.db.users.mixins import UserRelationMixin
 
 class QueryModel(Base, UserRelationMixin, PromptRelationMixin):
     __tablename__ = "queries"
+    __table_args__ = (
+        Index("ix_queries_prompt_id_time_create", "prompt_id", "time_create"),
+    )
     _user_back_populates = "queries"
     _prompt_back_populates = "queries"
     _prompt_uselist = True

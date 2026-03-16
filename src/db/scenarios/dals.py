@@ -1,12 +1,8 @@
 import uuid
 
-from sqlalchemy import delete, desc, func, inspect, or_, select, text, update
-from sqlalchemy.exc import NoResultFound
-from sqlalchemy.orm import selectinload
+from sqlalchemy import delete, desc, func, select, text
 
 from src.db.dals import BaseDAL
-from src.db.scenarios.models import ScenarioModel, ScenarioPromptsModel
-from src.db.users.models import UserAccountModel
 from src.db.utils import exception_dal
 
 ###########################################################
@@ -25,8 +21,8 @@ class ScenarioDAL(BaseDAL):
     ):
 
         conditions = [
-            self.model.is_active == True,
-            self.model.is_deleted == False,
+            self.model.is_active.is_(True),
+            self.model.is_deleted.is_(False),
             self.model.account_id == account_id,
         ]
         if search_query:
@@ -54,7 +50,7 @@ class ScenarioDAL(BaseDAL):
         query = select(self.model).where(
             self.model.uuid == scenario_id,
             self.model.account_id == account_id,
-            self.model.is_deleted == False,
+            self.model.is_deleted.is_(False),
         )
         db_query_result = await self.db_session.execute(query)
         return db_query_result.scalar_one_or_none()
@@ -71,7 +67,7 @@ class PromptScenarioDAL(BaseDAL):
     async def get(self, scenario_id: uuid.UUID, prompt_id: uuid.UUID):
         query = select(self.model).where(
             self.model.scenario_id == scenario_id,
-            self.model.prompt == prompt_id,
+            self.model.prompt_id == prompt_id,
         )
         db_query_result = await self.db_session.execute(query)
         return db_query_result.scalar_one_or_none()

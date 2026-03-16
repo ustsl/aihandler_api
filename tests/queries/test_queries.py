@@ -1,61 +1,54 @@
-from tests.conftest import client
-from tests.prompts.fixtures import *
-from tests.users.fixtures import *
+from tests.conftest import HEADERS, client
 
 
-def test_gpt_query(user_data_with_money, prompt_data):
+def test_gpt_query_uses_cache_and_deducts_balance_once(user_data_with_money, prompt_data):
+    headers = {"Authorization": user_data_with_money["token"]["token"]}
+    query_url = f'v1/queries/{user_data_with_money["telegram_id"]}'
 
-    user_data = user_data_with_money
-
-    headers = {"Authorization": user_data.get("token").get("token")}
-    query = f"v1/queries/{user_data.get("telegram_id")}"
-    response = client.post(
-        query,
+    first_response = client.post(
+        query_url,
         json={
-            "prompt_id": prompt_data.get("id"),
+            "prompt_id": prompt_data["id"],
+            "query": "merhaba",
+        },
+        headers=headers,
+    )
+    second_response = client.post(
+        query_url,
+        json={
+            "prompt_id": prompt_data["id"],
             "query": "merhaba",
         },
         headers=headers,
     )
 
-    response = client.post(
-        query,
-        json={
-            "prompt_id": prompt_data.get("id"),
-            "query": "merhaba",
-        },
-        headers=headers,
-    )
+    first_data = first_response.json()
+    second_data = second_response.json()
 
-    data = response.json()
+    assert first_response.status_code == 200
+    assert second_response.status_code == 200
+    assert first_data["result"].lower() == "hello"
+    assert second_data["result"].lower() == "hello"
+    assert first_data["cost"] > 0
+    assert second_data["cost"] == 0
+    assert second_data["quality_metrics"]["cached"] is True
 
-    result = data.get("result")
-    assert str(result.lower()) == "hello"
-    assert response.status_code == 200
-
-    query = f"v1/queries/"
-    query = f"v1/users/{user_data.get("telegram_id")}"
-    response = client.get(
-        query,
+    user_response = client.get(
+        f'v1/users/{user_data_with_money["telegram_id"]}',
         headers=HEADERS,
     )
-    balance = response.json().get("accounts").get("balance")
-    balance = float(balance)
-    assert balance > 0.49
-    assert balance < 0.5
+    balance = float(user_response.json()["accounts"]["balance"])
+    assert 0.49 < balance < 0.5
 
 
 def test_gpt_query_no_balance(prompt_data, user_data_with_prompt):
-
-    user_data = user_data_with_prompt
-
-    headers = {"Authorization": user_data.get("token").get("token")}
-    query = f"v1/queries/{user_data.get("telegram_id")}"
+    headers = {"Authorization": user_data_with_prompt["token"]["token"]}
+    query_url = f'v1/queries/{user_data_with_prompt["telegram_id"]}'
 
     response = client.post(
-        query,
+        query_url,
         json={
-            "prompt_id": prompt_data.get("id"),
+            "prompt_id": prompt_data["id"],
             "query": "merhaba merhaba",
         },
         headers=headers,

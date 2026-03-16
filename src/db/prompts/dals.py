@@ -22,7 +22,7 @@ class PromptDAL(BaseDAL):
             .options(
                 selectinload(PromptModel.account).selectinload(UserAccountModel.user)
             )
-            .where(PromptModel.uuid == prompt_id, PromptModel.is_deleted == False)
+            .where(PromptModel.uuid == prompt_id, PromptModel.is_deleted.is_(False))
         )
         db_query_result = await self.db_session.execute(query)
         return db_query_result.scalar_one_or_none()
@@ -38,8 +38,8 @@ class PromptDAL(BaseDAL):
     ):
 
         conditions = [
-            self.model.is_active == True,
-            self.model.is_deleted == False,
+            self.model.is_active.is_(True),
+            self.model.is_deleted.is_(False),
         ]
         if search_query:
             conditions.append(self.model.title.ilike(f"%{search_query}%"))
@@ -47,7 +47,7 @@ class PromptDAL(BaseDAL):
             conditions.append(self.model.account_id == account_id)
         else:
             conditions.append(
-                or_(self.model.is_open == True, self.model.uuid == account_id)
+                or_(self.model.is_open.is_(True), self.model.account_id == account_id)
             )
 
         query = (

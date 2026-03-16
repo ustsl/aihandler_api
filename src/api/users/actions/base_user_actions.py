@@ -25,14 +25,15 @@ async def _get_users(db: AsyncSession):
 
 
 async def _create_new_user(body: UserDataBase, db) -> UserDataExtend:
-    async with db as session:
-        async with session.begin():
-            obj_dal = UsersDAL(session, UserModel)
-            create_user_process = await obj_dal.create(telegram_id=body.telegram_id)
+    obj_dal = UsersDAL(db, UserModel)
+    create_user_process = await obj_dal.create(telegram_id=body.telegram_id)
+    if isinstance(create_user_process, dict) and create_user_process.get("error"):
+        raise HTTPException(status_code=500, detail=create_user_process["error"])
+    await db.commit()
 
     get_user = await obj_dal.get(telegram_id=body.telegram_id)
     if isinstance(get_user, dict) and get_user.get("error"):
-        raise HTTPException(status_code=500, detail=create_user_process["error"])
+        raise HTTPException(status_code=500, detail=get_user["error"])
     return get_user
 
 

@@ -1,40 +1,37 @@
-from tests.conftest import client
-from tests.prompts.fixtures import *
-from tests.users.fixtures import *
+from tests.conftest import HEADERS, client
 
 
-def get_user(user_id):
-    user_data = client.get(
+def _get_user(user_id: str) -> dict:
+    response = client.get(
         f"v1/users/{user_id}",
         headers=HEADERS,
     )
-    return user_data.json()
+    assert response.status_code == 200
+    return response.json()
 
 
 def test_user_set_language(user_data_with_money):
+    telegram_id = user_data_with_money["telegram_id"]
+    assert user_data_with_money["settings"]["language"] is None
 
-    user_data = user_data_with_money
-    tg_id = user_data.get("telegram_id")
-    assert user_data.get("settings").get("language") == None
+    api_link = f"v1/users/{telegram_id}/settings"
 
-    api_link = f"v1/users/{tg_id}/settings"
-
-    client.put(
+    invalid_lang_response = client.put(
         api_link,
         json={"language": "eng"},
         headers=HEADERS,
     )
+    assert invalid_lang_response.status_code == 200
 
-    user_data = get_user(tg_id)
+    unchanged_user_data = _get_user(telegram_id)
+    assert unchanged_user_data["settings"]["language"] is None
 
-    assert user_data.get("settings").get("language") == None
-
-    client.put(
+    valid_lang_response = client.put(
         api_link,
         json={"language": "en"},
         headers=HEADERS,
     )
+    assert valid_lang_response.status_code == 200
 
-    user_data = get_user(tg_id)
-
-    assert user_data.get("settings").get("language") == "en"
+    updated_user_data = _get_user(telegram_id)
+    assert updated_user_data["settings"]["language"] == "en"
