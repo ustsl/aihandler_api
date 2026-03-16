@@ -31,3 +31,9 @@ class PromptModel(MaintenanceModel, TimeModel):
     scenario = relationship(
         ScenarioPromptsModel, back_populates="prompt", cascade="all, delete-orphan"
     )
+    prompt_tools = relationship(
+        "PromptToolModel",
+        back_populates="prompt",
+        cascade="all, delete-orphan",
+    )
+    tool_call_logs = relationship("ToolCallLogModel", back_populates="prompt")

@@ -15,6 +15,7 @@
 - `tests/queries/*`: кеш, история, валидация запроса, story-crop.
 - `tests/scenarios/*`: создание/обновление/запуск/ошибки.
 - `tests/analytics/*`: сервисная аналитика и авторизация.
+- `tests/tools/*`: CRUD tools, bind к prompt, orchestrator execution, guards.
 - `tests/modules/gpt/*`: модульные тесты расчетов стоимости.
 
 ## Фикстуры

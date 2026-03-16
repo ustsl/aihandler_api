@@ -58,3 +58,23 @@ class GPTPromptShowFull(GPTPromptShow):
 class GPTPromptList(BaseModel):
     total: int
     result: List[GPTPromptShow]
+
+
+class PromptToolsBindBody(BaseModel):
+    tool_ids: List[UUID]
+    replace: bool = True
+
+
+class PromptToolShow(BaseModel):
+    uuid: UUID
+    name: str
+    description: str
+    transport: str
+    method: str
+    url: Optional[str] = None
+    is_active: bool
+
+
+class PromptToolList(BaseModel):
+    result: List[PromptToolShow]
+    total: int

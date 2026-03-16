@@ -8,6 +8,7 @@
 - `API_WORKFLOWS.md`: основные API-потоки по приложениям (`users`, `prompts`, `queries`, `scenarios`, `analytics`).
 - `DB_AND_MIGRATIONS.md`: модель БД, важные связи и индексы (включая кеш query-history).
 - `TESTING_GUIDE.md`: как устроены тесты, как запускать и как расширять покрытие.
+- `TOOLS_MODULE.md`: детальная документация по модулю инструментов (registry, bind, execution, logs).
 
 ## Быстрый старт для разработчика
 1. Прочитать `ARCHITECTURE.md`.

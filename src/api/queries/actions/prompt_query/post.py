@@ -8,9 +8,12 @@ from src.api.queries.actions.balance.put import _transfer_balance
 from src.api.queries.modules.quality_metrics import build_query_quality_metrics
 from src.api.queries.modules.story_crop import story_crop_function
 from src.api.utils import handle_dal_errors
+from src.db.tools.dals import PromptToolDAL, ToolCallLogDAL
+from src.db.tools.models import PromptToolModel, ToolCallLogModel
 from src.db.users.dals.transaction import MoneyTransactionUserDal
 from src.db.users.models import UserAccountModel
 from src.modules.gpt.handler import gpt_handler
+from src.modules.tools.orchestrator import run_prompt_with_tools
 
 
 def _build_query_payload(
@@ -23,6 +26,40 @@ def _build_query_payload(
             query=query, result=result, cached=cached
         ),
     }
+
+
+async def _get_active_prompt_tools(prompt_id: str, db: AsyncSession) -> list:
+    prompt_tool_dal = PromptToolDAL(db, PromptToolModel)
+    links = await prompt_tool_dal.list_prompt_tools(prompt_id=prompt_id)
+    tools = []
+    for link in links:
+        tool = link.tool
+        if tool and not tool.is_deleted and tool.is_active:
+            tools.append(tool)
+    return tools
+
+
+async def _persist_tool_call_logs(
+    db: AsyncSession,
+    prompt_id: str,
+    logs: list[dict],
+    query_id: str | None = None,
+):
+    if not logs:
+        return
+    log_dal = ToolCallLogDAL(db, ToolCallLogModel)
+    for log in logs:
+        await log_dal.create_safe_log(
+            query_id=query_id,
+            prompt_id=prompt_id,
+            tool_id=log.get("tool_id"),
+            tool_name=log.get("tool_name") or "unknown",
+            status=log.get("status") or "error",
+            duration_ms=log.get("duration_ms"),
+            request_payload=log.get("request_payload"),
+            response_payload=log.get("response_payload"),
+            error_text=log.get("error_text"),
+        )
 
 
 @handle_dal_errors
@@ -68,9 +105,21 @@ async def _create_query(
         "vision": vision,
     }
 
-    model_response = await gpt_handler(params)
+    prompt_tools = await _get_active_prompt_tools(prompt_id=prompt.uuid, db=db)
+    if prompt_tools:
+        model_response = await run_prompt_with_tools(params=params, tools=prompt_tools)
+    else:
+        model_response = await gpt_handler(params)
 
     if model_response.get("error"):
+        if model_response.get("tool_call_logs"):
+            await _persist_tool_call_logs(
+                db=db,
+                prompt_id=prompt.uuid,
+                logs=model_response.get("tool_call_logs"),
+                query_id=None,
+            )
+            await db.commit()
         return {"error": model_response.get("error"), "status": 500}
 
     result_text = model_response.get("result")
@@ -87,13 +136,20 @@ async def _create_query(
             session=db,
         )
 
-    await _save_query(
+    created_query = await _save_query(
         user_id=user_id,
         prompt_id=prompt_id,
         query=query,
         result=result_text,
         db=db,
     )
+    if model_response.get("tool_call_logs"):
+        await _persist_tool_call_logs(
+            db=db,
+            prompt_id=prompt.uuid,
+            logs=model_response.get("tool_call_logs"),
+            query_id=created_query.uuid,
+        )
     await db.commit()
 
     return _build_query_payload(query=query, result=result_text, cost=cost, cached=False)

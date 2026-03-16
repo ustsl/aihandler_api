@@ -27,6 +27,7 @@ if config.config_file_name is not None:
 from src.db.prompts.models import PromptModel
 from src.db.queries.models import QueryModel
 from src.db.scenarios.models import ScenarioModel, ScenarioPromptsModel
+from src.db.tools.models import PromptToolModel, ToolCallLogModel, ToolModel
 from src.db.users.models import (UserAccountModel, UserModel,
                                  UserSettingsModel, UserTokenModel)
 

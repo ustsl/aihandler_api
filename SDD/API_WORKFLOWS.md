@@ -75,3 +75,20 @@
 ### Общий список запросов
 `GET /v1/analytics/queries`
 - Сервисная аналитика, доступ по `SERVICE_TOKEN`.
+
+## 6) Tools
+
+### Реестр инструментов
+`POST /v1/tools/{telegram_id}`
+`GET /v1/tools/{telegram_id}`
+`GET /v1/tools/{telegram_id}/{tool_id}`
+`PUT /v1/tools/{telegram_id}/{tool_id}`
+`DELETE /v1/tools/{telegram_id}/{tool_id}`
+
+### Привязка tools к prompt
+`PUT /v1/prompts/{telegram_id}/{prompt_id}/tools`
+`GET /v1/prompts/{telegram_id}/{prompt_id}/tools`
+
+### Выполнение в query pipeline
+- Если у prompt есть tools, запрос идет в orchestrator tool-calls.
+- Если tools нет, используется обычный GPT flow.

@@ -6,11 +6,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.api.prompts.actions import (
     _create_new_prompt,
     _delete_prompt,
+    _get_prompt_tools,
+    _set_prompt_tools,
     _show_prompt,
     _show_prompts,
     _update_prompt,
 )
-from src.api.prompts.schemas import GPTPromptBase, GPTPromptCreate, GPTPromptList
+from src.api.prompts.schemas import (GPTPromptBase, GPTPromptCreate, GPTPromptList,
+                                     PromptToolList, PromptToolsBindBody)
 from src.api.users.actions.base_user_actions import _get_user
 from src.api.utils import verify_user_data
 from src.db.session import get_db
@@ -62,3 +65,27 @@ async def update_prompt(
 async def delete_prompt(id: UUID, telegram_id, db: AsyncSession = Depends(get_db)):
     res = await _delete_prompt(id, telegram_id, db)
     return res
+
+
+@prompt_router.put("/{telegram_id}/{prompt_id}/tools", response_model=PromptToolList)
+async def set_prompt_tools(
+    telegram_id: str,
+    prompt_id: UUID,
+    body: PromptToolsBindBody,
+    db: AsyncSession = Depends(get_db),
+):
+    return await _set_prompt_tools(
+        prompt_id=prompt_id,
+        telegram_id=telegram_id,
+        body=body,
+        db=db,
+    )
+
+
+@prompt_router.get("/{telegram_id}/{prompt_id}/tools", response_model=PromptToolList)
+async def get_prompt_tools(
+    telegram_id: str,
+    prompt_id: UUID,
+    db: AsyncSession = Depends(get_db),
+):
+    return await _get_prompt_tools(prompt_id=prompt_id, telegram_id=telegram_id, db=db)

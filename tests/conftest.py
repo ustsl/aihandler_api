@@ -17,6 +17,7 @@ pytest_plugins = [
     "tests.users.fixtures",
     "tests.prompts.fixtures",
     "tests.scenarios.fixtures",
+    "tests.tools.fixtures",
 ]
 
 # DATABASE

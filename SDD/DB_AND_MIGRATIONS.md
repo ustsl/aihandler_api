@@ -7,6 +7,9 @@
 - `user_settings`
 - `prompts`
 - `queries`
+- `tools`
+- `prompt_tools`
+- `tool_call_logs`
 - `scenario`
 - `scenario_prompts_relation`
 
@@ -16,6 +19,9 @@
 - `users (1) -> (1) user_settings`
 - `accounts (1) -> (N) prompts`
 - `prompts (1) -> (N) queries`
+- `prompts (1) -> (N) prompt_tools`
+- `tools (1) -> (N) prompt_tools`
+- `prompts (1) -> (N) tool_call_logs`
 - `scenario (1) -> (N) scenario_prompts_relation`
 - `prompts (1) -> (N) scenario_prompts_relation`
 
@@ -33,9 +39,11 @@
 Это ускоряет проверку кеша без индексации длинного поля ответа (`result`).
 
 ## Alembic
-- Текущий head в проекте: `9c9f0d5f93b1`.
+- Текущий head в проекте: `c31a9c8de421`.
 - Миграция индексов кеша:
   - `alembic/versions/2026_03_16_2300-9c9f0d5f93b1_queries_cache_indexes.py`
+- Миграция tools-модуля:
+  - `alembic/versions/2026_03_17_0000-c31a9c8de421_tools_module.py`
 
 ## Правила изменений схемы
 1. Любое изменение ORM-модели сопровождать Alembic миграцией.
