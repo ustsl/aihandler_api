@@ -14,6 +14,21 @@ from src.db.users.dals.transaction import MoneyTransactionUserDal
 from src.db.users.models import UserAccountModel
 from src.modules.gpt.handler import gpt_handler
 from src.modules.tools.orchestrator import run_prompt_with_tools
+from src.settings import TRANSCRIPTION_MODELS
+
+
+MAX_AUDIO_FILE_SIZE = 5 * 1024 * 1024
+ALLOWED_AUDIO_CONTENT_TYPES = {
+    "audio/mpeg",
+    "audio/mp4",
+    "audio/mpga",
+    "audio/m4a",
+    "audio/wav",
+    "audio/x-wav",
+    "audio/webm",
+    "video/mp4",
+}
+ALLOWED_AUDIO_EXTENSIONS = {".mp3", ".mp4", ".mpeg", ".mpga", ".m4a", ".wav", ".webm"}
 
 
 def _build_query_payload(
@@ -72,6 +87,11 @@ async def _create_query(
     vision: Optional[bool] = False,
 ):
     prompt = await _show_prompt(prompt_id=prompt_id, user_id=user_id, db=db)
+    if prompt.model in TRANSCRIPTION_MODELS:
+        return {
+            "error": "Audio transcription prompts require multipart file upload endpoint",
+            "status": 400,
+        }
     prepared_story = story or []
 
     if prompt.context_story_window > 0:
@@ -120,7 +140,10 @@ async def _create_query(
                 query_id=None,
             )
             await db.commit()
-        return {"error": model_response.get("error"), "status": 500}
+        return {
+            "error": model_response.get("error"),
+            "status": model_response.get("status", 500),
+        }
 
     result_text = model_response.get("result")
     if not result_text:
@@ -153,3 +176,100 @@ async def _create_query(
     await db.commit()
 
     return _build_query_payload(query=query, result=result_text, cost=cost, cached=False)
+
+
+def _validate_audio_file_metadata(filename: str | None, content_type: str | None) -> str:
+    suffix = ""
+    if filename and "." in filename:
+        suffix = "." + filename.rsplit(".", 1)[-1].lower()
+
+    if (
+        content_type not in ALLOWED_AUDIO_CONTENT_TYPES
+        and suffix not in ALLOWED_AUDIO_EXTENSIONS
+    ):
+        return "Invalid audio file format"
+    return ""
+
+
+@handle_dal_errors
+async def _create_file_query(
+    prompt_id: str,
+    user_id: str,
+    query: str,
+    file,
+    db: AsyncSession,
+):
+    if not file:
+        return {"error": "Audio file is required as multipart/form-data", "status": 400}
+    if not prompt_id:
+        return {"error": "prompt_id form field is required", "status": 400}
+
+    prompt = await _show_prompt(prompt_id=prompt_id, user_id=user_id, db=db)
+    if prompt.model not in TRANSCRIPTION_MODELS:
+        return {
+            "error": "File upload endpoint supports only audio transcription prompts",
+            "status": 400,
+        }
+
+    metadata_error = _validate_audio_file_metadata(
+        filename=file.filename,
+        content_type=file.content_type,
+    )
+    if metadata_error:
+        return {"error": metadata_error, "status": 400}
+
+    file_bytes = await file.read()
+    if len(file_bytes) > MAX_AUDIO_FILE_SIZE:
+        return {"error": "File size exceeds 5MB limit", "status": 400}
+    if not file_bytes:
+        return {"error": "Audio file is empty", "status": 400}
+
+    user_obj_dal = MoneyTransactionUserDal(db, UserAccountModel)
+    check_balance = await user_obj_dal.check_balance(user_id)
+    if not check_balance.get("result"):
+        return {"error": "wallet it empty", "status": 403}
+
+    params = {
+        "prompt": prompt.prompt,
+        "message": query or "",
+        "model": prompt.model,
+        "file_bytes": file_bytes,
+        "filename": file.filename,
+        "content_type": file.content_type,
+    }
+    model_response = await gpt_handler(params)
+    if model_response.get("error"):
+        return {
+            "error": model_response.get("error"),
+            "status": model_response.get("status", 500),
+        }
+
+    result_text = model_response.get("result")
+    if not result_text:
+        return {"error": "Empty model response", "status": 500}
+
+    cost = float(model_response.get("cost") or 0)
+    if cost > 0:
+        await _transfer_balance(
+            query_user_id=user_id,
+            prompt_user_id=prompt.user_id,
+            cost=cost,
+            session=db,
+        )
+
+    stored_query = query or f"[audio file: {file.filename or 'audio'}]"
+    await _save_query(
+        user_id=user_id,
+        prompt_id=prompt_id,
+        query=stored_query,
+        result=result_text,
+        db=db,
+    )
+    await db.commit()
+
+    return _build_query_payload(
+        query=stored_query,
+        result=result_text,
+        cost=cost,
+        cached=False,
+    )

@@ -118,6 +118,7 @@ ENV/
 
 .DS_Store
 *.sqlite3
+*.sql
 *.pyc
 *.db
 *.pid

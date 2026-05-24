@@ -44,6 +44,8 @@ GPTModelName: TypeAlias = Literal[
     "gpt-4o-mini",
     "gpt-4o-mini-audio-preview",
     "gpt-4o-audio-preview",
+    "gpt-4o-mini-transcribe",
+    "gpt-4o-transcribe",
     "gpt-5",
     "gpt-5-mini",
     "gpt-5-nano",
@@ -57,6 +59,8 @@ ALLOWED_MODELS_WITH_PRICE = {
     "gpt-4o-mini": 0.03,
     "gpt-4o-mini-audio-preview": 0.06,
     "gpt-4o-audio-preview": 0.105,
+    "gpt-4o-mini-transcribe": 0.00125,
+    "gpt-4o-transcribe": 0.006,
     "gpt-5": 3.0,
     "gpt-5-mini": 0.75,
     "gpt-5-nano": 0.075,
@@ -64,3 +68,8 @@ ALLOWED_MODELS_WITH_PRICE = {
 }
 
 ALLOWED_MODELS = list(get_args(GPTModelName))
+
+TRANSCRIPTION_MODELS = {
+    "gpt-4o-mini-transcribe",
+    "gpt-4o-transcribe",
+}

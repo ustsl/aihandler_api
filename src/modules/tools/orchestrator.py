@@ -2,6 +2,7 @@ import json
 import time
 
 from src.modules.gpt.modules.calc import GptTokenCalculator
+from src.modules.gpt.modules.exception_wrapper import OpenAIAPIError
 from src.modules.gpt.tool_calls import run_chat_with_tools
 from src.modules.tools.executor import execute_tool
 from src.modules.tools.validator import validate_tool_arguments
@@ -51,11 +52,18 @@ async def run_prompt_with_tools(params: dict, tools: list, max_steps: int = 5) -
     logs = []
 
     for _ in range(max_steps):
-        model_response = await run_chat_with_tools(
-            model=params.get("model"),
-            messages=messages,
-            tools=openai_tools,
-        )
+        try:
+            model_response = await run_chat_with_tools(
+                model=params.get("model"),
+                messages=messages,
+                tools=openai_tools,
+            )
+        except OpenAIAPIError as exc:
+            return {
+                "error": str(exc),
+                "status": exc.status_code or 500,
+                "tool_call_logs": logs,
+            }
         assistant_message = model_response.get("message") or {}
         total_tokens += int(model_response.get("tokens") or 0)
 

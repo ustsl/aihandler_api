@@ -1,9 +1,11 @@
 from typing import List
-from fastapi import APIRouter, Depends
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, File, Form, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.queries.actions.analytics.get import _show_personal_queries
-from src.api.queries.actions.prompt_query.post import _create_query
+from src.api.queries.actions.prompt_query.post import _create_file_query, _create_query
 from src.api.queries.actions.scenario.post import _start_scenario
 from src.api.queries.schemas import (
     UserQueryBase,
@@ -35,6 +37,25 @@ async def create_query(
     )
 
     return res
+
+
+@query_router.post("/{telegram_id}/file", response_model=UserQueryResult)
+async def create_file_query(
+    telegram_id: str,
+    prompt_id: UUID | None = Form(None),
+    query: str | None = Form(None),
+    file: UploadFile | None = File(None),
+    db: AsyncSession = Depends(get_db),
+) -> UserQueryResult:
+    user = await _get_user(telegram_id=telegram_id, db=db)
+
+    return await _create_file_query(
+        prompt_id=prompt_id,
+        user_id=user.uuid,
+        query=query or "",
+        file=file,
+        db=db,
+    )
 
 
 @query_router.post("/{telegram_id}/scenario", response_model=List[UserQueryResult])
