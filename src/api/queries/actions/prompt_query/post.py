@@ -14,10 +14,9 @@ from src.db.users.dals.transaction import MoneyTransactionUserDal
 from src.db.users.models import UserAccountModel
 from src.modules.gpt.handler import gpt_handler
 from src.modules.tools.orchestrator import run_prompt_with_tools
-from src.settings import TRANSCRIPTION_MODELS
+from src.settings import AUDIO_TRANSCRIPTION_MAX_FILE_SIZE, TRANSCRIPTION_MODELS
 
 
-MAX_AUDIO_FILE_SIZE = 5 * 1024 * 1024
 ALLOWED_AUDIO_CONTENT_TYPES = {
     "audio/mpeg",
     "audio/mp4",
@@ -29,6 +28,10 @@ ALLOWED_AUDIO_CONTENT_TYPES = {
     "video/mp4",
 }
 ALLOWED_AUDIO_EXTENSIONS = {".mp3", ".mp4", ".mpeg", ".mpga", ".m4a", ".wav", ".webm"}
+
+
+def _format_file_size(size_bytes: int) -> str:
+    return f"{size_bytes / 1024 / 1024:.0f}MB"
 
 
 def _build_query_payload(
@@ -219,8 +222,14 @@ async def _create_file_query(
         return {"error": metadata_error, "status": 400}
 
     file_bytes = await file.read()
-    if len(file_bytes) > MAX_AUDIO_FILE_SIZE:
-        return {"error": "File size exceeds 5MB limit", "status": 400}
+    if len(file_bytes) > AUDIO_TRANSCRIPTION_MAX_FILE_SIZE:
+        return {
+            "error": (
+                "Audio file is too large for transcription. "
+                f"Maximum size is {_format_file_size(AUDIO_TRANSCRIPTION_MAX_FILE_SIZE)}"
+            ),
+            "status": 413,
+        }
     if not file_bytes:
         return {"error": "Audio file is empty", "status": 400}
 

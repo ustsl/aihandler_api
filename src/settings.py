@@ -73,3 +73,8 @@ TRANSCRIPTION_MODELS = {
     "gpt-4o-mini-transcribe",
     "gpt-4o-transcribe",
 }
+
+AUDIO_TRANSCRIPTION_MAX_FILE_SIZE = env.int(
+    "AUDIO_TRANSCRIPTION_MAX_FILE_SIZE",
+    default=25 * 1024 * 1024,
+)

@@ -1,4 +1,5 @@
 from tests.conftest import HEADERS, client
+from src.api.queries.actions.prompt_query import post as prompt_query_actions
 
 
 def test_gpt_query_uses_cache_and_deducts_balance_once(user_data_with_money, prompt_data):
@@ -135,3 +136,39 @@ def test_file_query_sends_audio_to_gpt_handler(user_data_with_money, gpt_call_lo
     assert gpt_call_log[-1]["file_bytes"] == b"audio-bytes"
     assert gpt_call_log[-1]["filename"] == "voice.wav"
     assert gpt_call_log[-1]["content_type"] == "audio/wav"
+
+
+def test_file_query_accepts_audio_larger_than_old_5mb_limit(
+    user_data_with_money,
+    gpt_call_log,
+):
+    prompt = _create_prompt_with_model(user_data_with_money, "gpt-4o-mini-transcribe")
+    audio_bytes = b"0" * (6 * 1024 * 1024)
+
+    response = client.post(
+        f'v1/queries/{user_data_with_money["telegram_id"]}/file',
+        data={"prompt_id": prompt["id"], "query": "terms: Cardiology"},
+        files={"file": ("voice.mp3", audio_bytes, "audio/mpeg")},
+        headers={"Authorization": user_data_with_money["token"]["token"]},
+    )
+
+    assert response.status_code == 200
+    assert gpt_call_log[-1]["file_bytes"] == audio_bytes
+
+
+def test_file_query_rejects_audio_above_configured_limit(
+    user_data_with_money,
+    monkeypatch,
+):
+    prompt = _create_prompt_with_model(user_data_with_money, "gpt-4o-mini-transcribe")
+    monkeypatch.setattr(prompt_query_actions, "AUDIO_TRANSCRIPTION_MAX_FILE_SIZE", 10)
+
+    response = client.post(
+        f'v1/queries/{user_data_with_money["telegram_id"]}/file',
+        data={"prompt_id": prompt["id"], "query": "terms: Cardiology"},
+        files={"file": ("voice.mp3", b"0" * 11, "audio/mpeg")},
+        headers={"Authorization": user_data_with_money["token"]["token"]},
+    )
+
+    assert response.status_code == 413
+    assert "too large for transcription" in response.json()["detail"]
